@@ -21,6 +21,12 @@ dependencies {
 
     testImplementation("io.micronaut:micronaut-http-client")
 
+    // https://mvnrepository.com/artifact/mysql/mysql-connector-java
+    implementation 'mysql:mysql-connector-java:8.0.32'
+
+    // https://mvnrepository.com/artifact/org.xerial/sqlite-jdbc
+    implementation 'org.xerial:sqlite-jdbc:3.41.2.1'
+
 }
 
 
