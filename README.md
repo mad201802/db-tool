@@ -22,7 +22,7 @@ With the `-d` option you can specify the path to the driver jar file. If you don
 
 It is important to correctly handle all possible errors/exceptions. For example, if the user enters a wrong database type, the tool should print an error message and exit.
 Also, a wrong driver path should be handled correctly. If the config file is invalid, the tool should print an error message and exit.
-If the computer is not connected to the internet and the user tries to connect to a database, the tool should print an error message and exit.
+If the computer is not connected to the internet and the user tries to connect to an external database, the tool should print an error message and exit.
 In general, the tool should not crash, but print an valuable error message and exit.
 
 ### List all connection profiles
@@ -87,7 +87,7 @@ It is also possible to use operations like `>`, `<`, `>=` and `<=` in the range.
 ```
 db-tool grep -p [PROFILE_NAME] -tp "users" -cp "age" -vr ">18"
 ```
-
+Syntax: `-vr "<RANGE_OPERATOR><NUMBER>"`.
 If the column is not numeric, the tool will print an error message and exit.
 
 ### Limit the search result
