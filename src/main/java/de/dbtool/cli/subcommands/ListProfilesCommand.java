@@ -9,7 +9,7 @@ import picocli.CommandLine;
 public class ListProfilesCommand implements Runnable {
 
     @CommandLine.Option(names = {"-v", "--verbose"}, description = "Show more information about the profiles", required = false)
-    private final boolean verbose = false;
+    private boolean verbose = false;
 
     @Override
     public void run() {
