@@ -28,7 +28,7 @@ public class ProfileHandler {
         try{
             FileWriter fileWriter = new FileWriter(PROFILE_PATH + File.separator + name + ".json");
             System.out.println(PROFILE_PATH + File.separator + name + ".json");
-            System.out.println(gson.toJson(profile));
+            this.gson.toJson(profile, Profile.class, fileWriter);
             fileWriter.close();
         } catch (Exception e) {
             System.err.println("Error while creating profile file: " + e.getMessage());
