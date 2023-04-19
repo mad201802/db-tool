@@ -12,14 +12,11 @@ repositories {
 
 dependencies {
     annotationProcessor("info.picocli:picocli-codegen")
-    implementation("info.picocli:picocli")
-    implementation("io.micronaut:micronaut-jackson-databind")
-    implementation("io.micronaut.picocli:micronaut-picocli")
-    implementation("jakarta.annotation:jakarta.annotation-api")
-    runtimeOnly("ch.qos.logback:logback-classic")
-    implementation("io.micronaut:micronaut-validation")
 
-    testImplementation("io.micronaut:micronaut-http-client")
+    implementation("info.picocli:picocli")
+    implementation("io.micronaut.picocli:micronaut-picocli")
+
+    runtimeOnly("ch.qos.logback:logback-classic")
 
     // https://mvnrepository.com/artifact/mysql/mysql-connector-java
 //    implementation 'mysql:mysql-connector-java:8.0.32'
@@ -31,7 +28,7 @@ dependencies {
 
 
 application {
-    mainClass.set("de.dbtool.DbToolCommand")
+    mainClass.set("de.dbtool.Main")
 }
 java {
     sourceCompatibility = JavaVersion.toVersion("17")
