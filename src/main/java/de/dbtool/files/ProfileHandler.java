@@ -24,6 +24,27 @@ public class ProfileHandler {
         }
     }
 
+    /**
+     * Creates a new profile.
+     * @param name
+     * The name of the profile.
+     * @param hostname
+     * The hostname of the database.
+     * @param port
+     * The port of the database.
+     * @param dbName
+     * The name of the database.
+     * @param username
+     * The username for the database login.
+     * @param password
+     * The password for the database login.
+     * @param type
+     * The database type.
+     * @param driverPath
+     * The path to the database driver.
+     * @return
+     * Returns the created profile.
+     */
     public Profile createProfile(String name, String hostname, String port, String dbName, String username, String password, String type, String driverPath) {
         Profile profile = new Profile(name, hostname, port, dbName, username, password, type, driverPath);
         try{
@@ -32,22 +53,34 @@ public class ProfileHandler {
             this.gson.toJson(profile, Profile.class, fileWriter);
             fileWriter.close();
         } catch (Exception e) {
-            System.err.println("Error while creating profile file: " + e.getMessage());
+            System.err.println("Error while creating profile: " + e.getMessage());
         }
         return profile;
     }
 
+    /**
+     * Deletes a profile.
+     * @param name
+     * The name of the profile that should be deleted.
+     * @return
+     * Returns true if the profile was deleted successfully.
+     */
     public Boolean deleteProfile(String name) {
         try {
             File file = new File(PROFILE_PATH + File.separator + name + ".json");
             file.delete();
         } catch (Exception e) {
-            System.err.println("Error while deleting profile file: " + e.getMessage());
+            System.err.println("Error while deleting profile: " + e.getMessage());
             return false;
         }
         return true;
     }
 
+    /**
+     * Lists all valid profiles in the profile directory.
+     * @return
+     * Returns an array of profiles.
+     */
     public Profile[] listProfiles() {
         try {
             File folder = new File(PROFILE_PATH);
@@ -65,6 +98,13 @@ public class ProfileHandler {
         return null;
     }
 
+    /**
+     * Gets a profile by name.
+     * @param name
+     * The name of the profile.
+     * @return
+     * Returns the profile.
+     */
     public Profile getProfile(String name) {
         try {
             File file = new File(PROFILE_PATH + File.separator + name + ".json");
@@ -77,11 +117,21 @@ public class ProfileHandler {
         return null;
     }
 
+    /**
+     * Checks if the profile directory exists.
+     * @return
+     * Returns true if the profile directory exists.
+     */
     public boolean profileDirExists() {
         File folder = new File(PROFILE_PATH);
         return folder.exists();
     }
 
+    /**
+     * Creates the profile directory.
+     * @return
+     * Returns true if the profile directory was created successfully.
+     */
     public boolean profileDirCreate() {
         File folder = new File(PROFILE_PATH);
         return folder.mkdirs();
