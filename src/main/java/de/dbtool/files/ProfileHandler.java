@@ -136,5 +136,19 @@ public class ProfileHandler {
         File folder = new File(PROFILE_PATH);
         return folder.mkdirs();
     }
+
+    /**
+     * Generates a profile file name with 6 chars (numbers and lowercase letters).
+     * @return
+     * Returns the generated file name.
+     */
+    public String generateProfileFileName() {
+        StringBuilder fileName = new StringBuilder();
+        String chars = "abcdefghijklmnopqrstuvwxyz0123456789";
+        for(int i = 0; i < 6; i++) {
+            fileName.append(chars.charAt((int) (Math.random() * chars.length())));
+        }
+        return fileName.toString();
+    }
 }
     
