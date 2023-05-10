@@ -24,6 +24,6 @@ public class Profile {
 
     @Override
     public String toString() {
-        return "[Profile] " + name + " - " + hostname + ":" + port + " - " + dbName + " - " + username + " - " + password + " - " + type + " - " + driverPath + "\n";
+        return "[Profile] " + name + " | " + hostname + ":" + port + " | " + dbName + " | " + username + " | " + password + " | " + type + " | " + driverPath + "\n";
     }
 }
