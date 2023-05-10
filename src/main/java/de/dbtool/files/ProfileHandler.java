@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import de.dbtool.files.schemas.Profile;
 
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 
 /**
@@ -52,8 +53,10 @@ public class ProfileHandler {
             File folder = new File(PROFILE_PATH);
             File[] files = folder.listFiles();
             Profile[] profiles = new Profile[files.length];
-            for (int i = 0; i < files.length; i++) {
-                profiles[i] = gson.fromJson(files[i].toString(), Profile.class);
+            for(int i = 0; i < files.length; i++) {
+                FileReader fileReader = new FileReader(files[i].getPath());
+                profiles[i] = gson.fromJson(fileReader, Profile.class);
+                fileReader.close();
             }
             return profiles;
         } catch (Exception e) {
@@ -65,9 +68,11 @@ public class ProfileHandler {
     public Profile getProfile(String name) {
         try {
             File file = new File(PROFILE_PATH + File.separator + name + ".json");
-            return gson.fromJson(file.toString(), Profile.class);
+            FileReader fileReader = new FileReader(file.getPath());
+            Profile profile = gson.fromJson(fileReader, Profile.class);
+            return profile;
         } catch (Exception e) {
-            System.err.println("Error while getting profile file: " + e.getMessage());
+            System.err.println("Error while getting profile: " + e.getMessage());
         }
         return null;
     }
