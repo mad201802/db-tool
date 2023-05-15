@@ -20,10 +20,17 @@ dependencies {
     runtimeOnly("ch.qos.logback:logback-classic")
 
     // https://mvnrepository.com/artifact/mysql/mysql-connector-java
-//    implementation 'mysql:mysql-connector-java:8.0.32'
+    implementation 'mysql:mysql-connector-java:8.0.32'
 
     // https://mvnrepository.com/artifact/org.xerial/sqlite-jdbc
     implementation 'org.xerial:sqlite-jdbc:3.41.2.1'
+
+    // https://mvnrepository.com/artifact/org.hibernate/hibernate-validator
+    implementation 'org.hibernate:hibernate-validator:8.0.0.Final'
+
+    // https://mvnrepository.com/artifact/org.glassfish/jakarta.el
+    implementation 'org.glassfish:jakarta.el:5.0.0-M1'
+
 
 }
 

@@ -1,5 +1,7 @@
 package de.dbtool.files.schemas;
 
+import de.dbtool.cli.subcommands.options.SupportedDatabases;
+
 public class Profile {
 
     public String name;
@@ -8,10 +10,10 @@ public class Profile {
     public String dbName;
     public String username;
     public String password;
-    public String type;
+    public SupportedDatabases type;
     public String driverPath;
 
-    public Profile(String name, String hostname, int port, String dbName, String username, String password, String type, String driverPath) {
+    public Profile(String name, String hostname, int port, String dbName, String username, String password, SupportedDatabases type, String driverPath) {
         this.name = name;
         this.hostname = hostname;
         this.port = port;

@@ -1,9 +1,14 @@
 package de.dbtool.files;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonIOException;
+import com.google.gson.JsonSyntaxException;
+import de.dbtool.cli.subcommands.options.SupportedDatabases;
+import de.dbtool.exceptions.DbToolException;
 import de.dbtool.files.schemas.Profile;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 
@@ -45,7 +50,7 @@ public class ProfileHandler {
      * @return
      * Returns the created profile.
      */
-    public Profile createProfile(String name, String hostname, int port, String dbName, String username, String password, String type, String driverPath) {
+    public Profile createProfile(String name, String hostname, int port, String dbName, String username, String password, SupportedDatabases type, String driverPath) {
         Profile profile = new Profile(name, hostname, port, dbName, username, password, type, driverPath);
         try {
             FileWriter fileWriter = new FileWriter(PROFILE_PATH + File.separator + name + ".json");
@@ -101,20 +106,20 @@ public class ProfileHandler {
 
     /**
      * Gets a profile by name.
-     * @param name
-     * The name of the profile.
-     * @return
-     * Returns the profile.
+     *
+     * @param name The name of the profile.
+     * @return Returns the profile.
      */
-    public Profile getProfile(String name) {
+    public Profile getProfile(String name) throws DbToolException {
         try {
             File file = new File(PROFILE_PATH + File.separator + name + ".json");
             FileReader fileReader = new FileReader(file.getPath());
             return gson.fromJson(fileReader, Profile.class);
-        } catch (Exception e) {
-            System.err.println("Error while getting profile: " + e.getMessage());
+        } catch (NullPointerException | FileNotFoundException ex) {
+            return null;
+        } catch (JsonIOException | JsonSyntaxException ex) {
+            throw new DbToolException("Config file is corrupted. Please delete the profile and create a new one.");
         }
-        return null;
     }
 
     /**
