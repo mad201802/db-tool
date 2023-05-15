@@ -15,6 +15,7 @@ dependencies {
 
     implementation("info.picocli:picocli")
     implementation("io.micronaut.picocli:micronaut-picocli")
+    implementation('com.google.code.gson:gson:2.10.1')
 
     runtimeOnly("ch.qos.logback:logback-classic")
 
