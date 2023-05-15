@@ -45,11 +45,10 @@ public class ProfileHandler {
      * @return
      * Returns the created profile.
      */
-    public Profile createProfile(String name, String hostname, String port, String dbName, String username, String password, String type, String driverPath) {
+    public Profile createProfile(String name, String hostname, int port, String dbName, String username, String password, String type, String driverPath) {
         Profile profile = new Profile(name, hostname, port, dbName, username, password, type, driverPath);
-        try{
+        try {
             FileWriter fileWriter = new FileWriter(PROFILE_PATH + File.separator + name + ".json");
-            System.out.println(PROFILE_PATH + File.separator + name + ".json");
             this.gson.toJson(profile, Profile.class, fileWriter);
             fileWriter.close();
         } catch (Exception e) {
@@ -85,8 +84,10 @@ public class ProfileHandler {
         try {
             File folder = new File(PROFILE_PATH);
             File[] files = folder.listFiles();
+            if (files == null) return new Profile[0];
+
             Profile[] profiles = new Profile[files.length];
-            for(int i = 0; i < files.length; i++) {
+            for (int i = 0; i < files.length; i++) {
                 FileReader fileReader = new FileReader(files[i].getPath());
                 profiles[i] = gson.fromJson(fileReader, Profile.class);
                 fileReader.close();
@@ -109,8 +110,7 @@ public class ProfileHandler {
         try {
             File file = new File(PROFILE_PATH + File.separator + name + ".json");
             FileReader fileReader = new FileReader(file.getPath());
-            Profile profile = gson.fromJson(fileReader, Profile.class);
-            return profile;
+            return gson.fromJson(fileReader, Profile.class);
         } catch (Exception e) {
             System.err.println("Error while getting profile: " + e.getMessage());
         }
