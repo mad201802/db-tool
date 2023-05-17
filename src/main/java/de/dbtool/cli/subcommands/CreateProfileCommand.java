@@ -54,7 +54,8 @@ public class CreateProfileCommand implements Runnable {
     public void run() {
         // Check if the user specified a custom driver path, but did not specify the type OTHER
         if (type == SupportedDatabases.OTHER && driverPath == null) {
-            throw new CommandLine.ParameterException(spec.commandLine(), "If you want to use a database type other than the supported ones, you have to specify the path to the jdbc driver\n");
+            System.err.println("If you want to use a database type other than the supported ones, you have to specify the path to the jdbc driver");
+            return;
         }
 
         // Validate the command line options
@@ -62,11 +63,12 @@ public class CreateProfileCommand implements Runnable {
         Set<ConstraintViolation<CreateProfileCommand>> violations = validator.validate(this);
 
         if (!violations.isEmpty()) {
-            StringBuilder errorMsg = new StringBuilder("\n");
+            StringBuilder errorMsg = new StringBuilder();
             for (ConstraintViolation<CreateProfileCommand> violation : violations) {
                 errorMsg.append("ERROR: ").append(violation.getMessage()).append("\n");
             }
-            throw new CommandLine.ParameterException(spec.commandLine(), errorMsg.toString());
+            System.err.println(errorMsg);
+            return;
         }
 
         // Create the profile
