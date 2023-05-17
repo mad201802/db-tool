@@ -1,7 +1,8 @@
 package de.dbtool.cli.subcommands.processors;
 
-import de.dbtool.exceptions.InvalidParameterException;
+import de.dbtool.exceptions.DbToolException;
 
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -20,7 +21,7 @@ public class ColumnLimitProcessor {
      * @return An ArrayList with the sorted numbers
      * @throws InvalidParameterException If the range string is invalid
      */
-    public static ArrayList<Integer> processColumnLimit(String range) throws InvalidParameterException {
+    public static ArrayList<Integer> processColumnLimit(String range) throws DbToolException {
         String[] queries = range.split(",");
         Set<Integer> querySet = new HashSet<>();
 
@@ -39,10 +40,10 @@ public class ColumnLimitProcessor {
                 }
             }
         } catch (NumberFormatException e) {
-            throw new InvalidParameterException("Column limit must be a number");
+            throw new DbToolException("Column limit must be a number");
         }
 
-        if (querySet.contains(0)) throw new InvalidParameterException("Column limit cannot be 0");
+        if (querySet.contains(0)) throw new DbToolException("Column limit cannot be 0");
 
         return new ArrayList<>(new TreeSet<>(querySet));
     }
