@@ -75,6 +75,7 @@ public class CreateProfileCommand implements Runnable {
 
             if (profileHandler.getProfile(name) != null) {
                 throw new DbToolException("Profile with name " + name + " already exists");
+                //TODO: Ask user if he wants to overwrite the profile
             }
 
             Profile newProfile = profileHandler.createProfile(name, hostname, port, dbName, username, password, type, driverPath);
