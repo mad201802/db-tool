@@ -11,6 +11,9 @@ import java.util.List;
 @CommandLine.Command(name = "grep", description = "Grep-like tool for searching a database", mixinStandardHelpOptions = true)
 public class GrepCommand implements Runnable {
 
+    @CommandLine.Spec
+    private CommandLine.Model.CommandSpec spec;
+
     @CommandLine.Option(names = {"-p", "--profile"}, description = "The name of the profile", required = true)
     private String profileName;
 

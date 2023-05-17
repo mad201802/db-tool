@@ -32,6 +32,7 @@ dependencies {
     implementation 'org.glassfish:jakarta.el:5.0.0-M1'
 
 
+    implementation 'com.github.freva:ascii-table:1.8.0'
 }
 
 
