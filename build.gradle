@@ -25,6 +25,7 @@ dependencies {
     // https://mvnrepository.com/artifact/org.xerial/sqlite-jdbc
     implementation 'org.xerial:sqlite-jdbc:3.41.2.1'
 
+    implementation 'com.github.freva:ascii-table:1.8.0'
 }
 
 
