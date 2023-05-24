@@ -5,7 +5,7 @@ import java.util.Properties;
 import java.util.logging.Logger;
 
 public class DriverWrapper implements Driver {
-    private Driver driver;
+    private final Driver driver;
 
     public DriverWrapper(Driver d) {
         this.driver = d;
@@ -44,5 +44,10 @@ public class DriverWrapper implements Driver {
     @Override
     public Logger getParentLogger() throws SQLFeatureNotSupportedException {
         return this.driver.getParentLogger();
+    }
+
+    @Override
+    public String toString() {
+        return this.driver.toString();
     }
 }

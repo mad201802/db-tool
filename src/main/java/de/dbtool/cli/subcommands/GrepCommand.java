@@ -1,8 +1,17 @@
 package de.dbtool.cli.subcommands;
 
 import de.dbtool.cli.subcommands.containers.*;
+import de.dbtool.cli.subcommands.options.SupportedDatabases;
+import de.dbtool.drivers.JDBCDriverLoader;
+import de.dbtool.exceptions.DbToolException;
+import de.dbtool.files.ProfileHandler;
+import de.dbtool.files.schemas.Profile;
+import de.dbtool.utils.ASCIIArt;
 import picocli.CommandLine;
 
+import java.sql.Driver;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -49,6 +58,25 @@ public class GrepCommand implements Runnable {
 
     @Override
     public void run() {
-        // TODO: Implement
+        try {
+            ProfileHandler profileHandler = new ProfileHandler();
+            Profile profile = profileHandler.getProfile(profileName);
+
+            if (profile == null) throw new DbToolException("Profile not found");
+
+            System.out.println("Using profile: " + profile.name);
+
+            if (profile.type == SupportedDatabases.OTHER) {
+                try {
+                    Driver driver = JDBCDriverLoader.loadDriver(profile.driverPath);
+                    ASCIIArt.handleDriverName(driver.toString());
+                    DriverManager.registerDriver(driver);
+                } catch (SQLException e) {
+                    throw new DbToolException("Error loading driver: " + e.getMessage());
+                }
+            }
+        } catch (DbToolException ex) {
+            System.err.println("Error: " + ex.getMessage());
+        }
     }
 }
