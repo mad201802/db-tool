@@ -7,12 +7,18 @@ import de.dbtool.exceptions.DbToolException;
 import de.dbtool.files.ProfileHandler;
 import de.dbtool.files.schemas.Profile;
 import de.dbtool.utils.ASCIIArt;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 import picocli.CommandLine;
 
 import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Subcommand to search for patterns/regex in a database
@@ -23,6 +29,7 @@ public class GrepCommand implements Runnable {
     @CommandLine.Spec
     private CommandLine.Model.CommandSpec spec;
 
+    @NotBlank(message = "Name must not be blank")
     @CommandLine.Option(names = {"-p", "--profile"}, description = "The name of the profile", required = true)
     private String profileName;
 
@@ -50,14 +57,30 @@ public class GrepCommand implements Runnable {
     @CommandLine.Option(names = {"-lc", "--limit-columns"}, description = "Limits the number of columns to display", required = false)
     private String limitColumnsQuery;
 
+    @Min(value = 1, message = "Limit rows must be greater than 0")
     @CommandLine.Option(names = {"-lr", "--limit-rows"}, description = "Limits the number of rows to display", required = false)
     private int limitRows;
 
+    @Min(value = 1, message = "Limit text length must be greater than 0")
     @CommandLine.Option(names = {"-lt", "--limit-text-length"}, description = "Limits the length of text in a column and display ellipsis", required = false)
     private int limitTextLength;
 
     @Override
     public void run() {
+
+        // Validate the command line options
+        Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+        Set<ConstraintViolation<GrepCommand>> violations = validator.validate(this);
+
+        if (!violations.isEmpty()) {
+            StringBuilder errorMsg = new StringBuilder();
+            for (ConstraintViolation<GrepCommand> violation : violations) {
+                errorMsg.append("ERROR: ").append(violation.getMessage()).append("\n");
+            }
+            System.err.println(errorMsg);
+            return;
+        }
+
         try {
             ProfileHandler profileHandler = new ProfileHandler();
             Profile profile = profileHandler.getProfile(profileName);
