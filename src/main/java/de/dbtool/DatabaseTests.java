@@ -1,23 +1,21 @@
 package de.dbtool;
 
-import de.dbtool.drivers.JDBCDriverLoader;
-
 import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 
 public class DatabaseTests {
 
-    private Connection conn;
+    private final Connection conn;
 
     public static void main(String[] args) throws SQLException, IOException {
-        Driver driver = JDBCDriverLoader.loadDriver("src\\main\\resources\\mysql-connector-j-8.0.32.jar");
-        DriverManager.registerDriver(driver);
-//        DatabaseTests dbTests = new DatabaseTests("jdbc:sqlite:src\\main\\resources\\test.sqlite");
-        DatabaseTests dbTests = new DatabaseTests("jdbc:mysql://192.168.178.60:6033/database", "admin", "admin");
-        dbTests.printAllTables();
-        System.out.println("====================================");
-        dbTests.printAllTableColumns("tasks");
+//        Driver driver = JDBCDriverLoader.loadDriver("src\\main\\resources\\mysql-connector-j-8.0.32.jar");
+//        DriverManager.registerDriver(driver);
+////        DatabaseTests dbTests = new DatabaseTests("jdbc:sqlite:src\\main\\resources\\test.sqlite");
+//        DatabaseTests dbTests = new DatabaseTests("jdbc:mysql://192.168.178.60:6033/database", "admin", "admin");
+//        dbTests.printAllTables();
+//        System.out.println("====================================");
+//        dbTests.printAllTableColumns("tasks");
     }
 
     public DatabaseTests(String connectionString) throws SQLException {
