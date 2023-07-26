@@ -3,6 +3,8 @@ package de.dbtool.cli.subcommands;
 import de.dbtool.cli.subcommands.containers.*;
 import de.dbtool.database.Query;
 import de.dbtool.database.QueryProcessor;
+import de.dbtool.database.factories.DatabaseFactory;
+import de.dbtool.database.interfaces.IDatabase;
 import de.dbtool.exceptions.DbToolException;
 import de.dbtool.files.ProfileHandler;
 import de.dbtool.files.schemas.Profile;
@@ -63,7 +65,8 @@ public class GrepCommand implements Runnable {
             System.out.println("Using profile: " + profile.name);
 
             Query query = new Query(tablePatternOptions, tableRegexOptions, columnPatternOptions, columnRegexOptions, valuePatternOptions, valueRegexOptions);
-            QueryProcessor queryProcessor = new QueryProcessor(profile, query);
+            IDatabase database = DatabaseFactory.getDatabaseType(profile);
+            QueryProcessor queryProcessor = new QueryProcessor(database, query);
             List<String[]> result = queryProcessor.executeQuery();
 
         } catch (DbToolException ex) {

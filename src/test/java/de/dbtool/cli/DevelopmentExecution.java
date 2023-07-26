@@ -18,7 +18,7 @@ public class DevelopmentExecution {
         System.setErr(new PrintStream(baos));
 
         try (ApplicationContext ctx = ApplicationContext.run(Environment.CLI, Environment.TEST)) {
-            String[] args = new String[]{"grep", "-p", "oracledb", "-lc", "1,2,8-22", "-lt", "10"};
+            String[] args = new String[]{"grep", "-p", "mysql", "-lc", "1,2,8-22", "-lt", "10"};
             PicocliRunner.run(DbToolCommand.class, ctx, args);
 
             // Set to default again
