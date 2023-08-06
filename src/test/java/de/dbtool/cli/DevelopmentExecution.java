@@ -34,7 +34,7 @@ public class DevelopmentExecution {
         System.setErr(new PrintStream(baos));
 
         try (ApplicationContext ctx = ApplicationContext.run(Environment.CLI, Environment.TEST)) {
-            String[] args = new String[]{"create-profile", "--name=oracledb", "--host=127.0.0.1", "--port=3306", "--database=db", "--username=root", "--password=root", "--type=OTHER", "-d=C:\\Users\\micha\\Downloads\\ojdbc11.jar"};
+            String[] args = new String[]{"create-profile", "--name=mysql", "--host=127.0.0.1", "--port=3306", "--database=db", "--username=root", "--password=root", "--type=MYSQL"};
             PicocliRunner.run(DbToolCommand.class, ctx, args);
 
             System.setOut(new PrintStream(new FileOutputStream(FileDescriptor.out)));
