@@ -18,7 +18,7 @@ import java.io.FileWriter;
  */
 public class ProfileHandler {
 
-    private static final String PROFILE_PATH = System.getProperty("user.home") + File.separator + ".dbtool" + File.separator + "profiles";
+    private static String PROFILE_PATH = System.getProperty("user.home") + File.separator + ".dbtool" + File.separator + "profiles";
     public Gson gson;
 
     public ProfileHandler() {
@@ -155,5 +155,10 @@ public class ProfileHandler {
         }
         return fileName.toString();
     }
+
+    public static void setProfilePath(String path) {
+        PROFILE_PATH = path;
+    }
+
 }
     
