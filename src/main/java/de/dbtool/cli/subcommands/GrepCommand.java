@@ -1,12 +1,13 @@
 package de.dbtool.cli.subcommands;
 
 import de.dbtool.cli.subcommands.containers.*;
-import de.dbtool.cli.subcommands.options.SupportedDatabases;
-import de.dbtool.drivers.JDBCDriverLoader;
+import de.dbtool.database.Query;
+import de.dbtool.database.QueryProcessor;
+import de.dbtool.database.factories.DatabaseFactory;
+import de.dbtool.database.interfaces.IDatabase;
 import de.dbtool.exceptions.DbToolException;
 import de.dbtool.files.ProfileHandler;
 import de.dbtool.files.schemas.Profile;
-import de.dbtool.utils.ASCIIArt;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
@@ -14,9 +15,6 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import picocli.CommandLine;
 
-import java.sql.Driver;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Set;
 
@@ -89,15 +87,11 @@ public class GrepCommand implements Runnable {
 
             System.out.println("Using profile: " + profile.name);
 
-            if (profile.type == SupportedDatabases.OTHER) {
-                try {
-                    Driver driver = JDBCDriverLoader.loadDriver(profile.driverPath);
-                    ASCIIArt.handleDriverName(driver.toString());
-                    DriverManager.registerDriver(driver);
-                } catch (SQLException e) {
-                    throw new DbToolException("Error loading driver: " + e.getMessage());
-                }
-            }
+            Query query = new Query(tablePatternOptions, tableRegexOptions, columnPatternOptions, columnRegexOptions, valuePatternOptions, valueRegexOptions);
+            IDatabase database = DatabaseFactory.getDatabaseType(profile);
+            QueryProcessor queryProcessor = new QueryProcessor(database, query);
+            List<String[]> result = queryProcessor.executeQuery();
+
         } catch (DbToolException ex) {
             System.err.println("Error: " + ex.getMessage());
         }
