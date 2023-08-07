@@ -11,7 +11,6 @@ import de.dbtool.files.schemas.Profile;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import picocli.CommandLine;
 
@@ -55,11 +54,9 @@ public class GrepCommand implements Runnable {
     @CommandLine.Option(names = {"-lc", "--limit-columns"}, description = "Limits the number of columns to display", required = false)
     private String limitColumnsQuery;
 
-    @Min(value = 1, message = "Limit rows must be greater than 0")
     @CommandLine.Option(names = {"-lr", "--limit-rows"}, description = "Limits the number of rows to display", required = false)
     private int limitRows;
 
-    @Min(value = 1, message = "Limit text length must be greater than 0")
     @CommandLine.Option(names = {"-lt", "--limit-text-length"}, description = "Limits the length of text in a column and display ellipsis", required = false)
     private int limitTextLength;
 
