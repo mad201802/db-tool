@@ -49,7 +49,7 @@ public class ListProfilesCommand implements Runnable {
             List<String[]> tableData = new ArrayList<>(profiles.length);
             tableData.add(new String[] {"Name", "Hostname", "Port", "Database", "Username", "Password", "Type", "Driver"});
             for(Profile p : profiles) {
-                tableData.add(new String[] {p.name, p.hostname, Integer.toString(p.port), p.dbName, p.username, p.password, p.type.toString(), p.driverPath});
+                tableData.add(new String[] {p.name, p.hostname, Integer.toString(p.port), p.dbName, p.username, tablePrinter.censorPassword(p.password), p.type.toString(), p.driverPath});
             }
 
             System.out.println("Available profiles:");
