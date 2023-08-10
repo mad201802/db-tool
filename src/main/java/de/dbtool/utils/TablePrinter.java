@@ -47,4 +47,9 @@ public class TablePrinter {
 
         return table;
     }
+
+    public String censorPassword(String password) {
+        if(password == null) return null;
+        return password.replaceAll(".", "*");
+    }
 }
