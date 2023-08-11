@@ -1,6 +1,8 @@
 plugins {
     id("com.github.johnrengelman.shadow") version "7.1.2"
     id("io.micronaut.application") version "3.7.4"
+    id("jacoco")
+
 }
 
 version = "0.1"
@@ -35,6 +37,20 @@ dependencies {
     implementation 'com.github.freva:ascii-table:1.8.0'
 }
 
+test {
+    useJUnitPlatform()
+    finalizedBy jacocoTestReport // report is always generated after tests run
+}
+
+jacocoTestReport {
+    dependsOn test // tests are required to run before generating the report
+
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [], includes: ["de/dbtool/**"])
+        }))
+    }
+}
 
 application {
     mainClass.set("de.dbtool.Main")

@@ -8,9 +8,9 @@ import de.dbtool.exceptions.DbToolException;
 import de.dbtool.files.schemas.Profile;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
 
 /**
  * Utility class for file handling.
@@ -18,7 +18,7 @@ import java.io.FileWriter;
  */
 public class ProfileHandler {
 
-    private static final String PROFILE_PATH = System.getProperty("user.home") + File.separator + ".dbtool" + File.separator + "profiles";
+    private static String PROFILE_PATH = System.getProperty("user.home") + File.separator + ".dbtool" + File.separator + "profiles";
     public Gson gson;
 
     public ProfileHandler() {
@@ -111,15 +111,19 @@ public class ProfileHandler {
      * @return Returns the profile.
      */
     public Profile getProfile(String name) throws DbToolException {
+        Profile profile = null;
         try {
-            File file = new File(PROFILE_PATH + File.separator + name + ".json");
+            File file = new File(PROFILE_PATH + File.separator + name + ".json");;
             FileReader fileReader = new FileReader(file.getPath());
-            return gson.fromJson(fileReader, Profile.class);
-        } catch (NullPointerException | FileNotFoundException ex) {
+            profile = gson.fromJson(fileReader, Profile.class);
+            fileReader.close();
+        } catch (NullPointerException | IOException ex) {
             return null;
         } catch (JsonIOException | JsonSyntaxException ex) {
             throw new DbToolException("Config file is corrupted. Please delete the profile and create a new one.");
         }
+
+        return profile;
     }
 
     /**
@@ -155,5 +159,10 @@ public class ProfileHandler {
         }
         return fileName.toString();
     }
+
+    public static void setProfilePath(String path) {
+        PROFILE_PATH = path;
+    }
+
 }
     
