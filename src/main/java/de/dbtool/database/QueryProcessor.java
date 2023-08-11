@@ -15,8 +15,8 @@ public class QueryProcessor {
 
     private final IDatabase db;
 
-    private Set<String> tables = new HashSet<>();
-    private Map<String, Set<String>> columns = new HashMap<>();
+    private final Set<String> tables = new HashSet<>();
+    private final Map<String, Set<String>> columns = new HashMap<>();
 
     public QueryProcessor(IDatabase db, Query query) throws DbToolException {
         this.db = db;
@@ -60,7 +60,7 @@ public class QueryProcessor {
                 }
             }
 
-            if (query.getTableRegex() != null) {
+            if (query.getColumnRegex() != null) {
                 List<String> allColumns = this.db.getTableColumns(table);
 
                 for (ColumnRegexOption regex : query.getColumnRegex()) {
