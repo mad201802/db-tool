@@ -1,14 +1,15 @@
 package de.dbtool.database;
 
+import de.dbtool.cli.subcommands.containers.ColumnPatternOption;
+import de.dbtool.cli.subcommands.containers.ColumnRegexOption;
 import de.dbtool.cli.subcommands.containers.TablePatternOption;
 import de.dbtool.cli.subcommands.containers.TableRegexOption;
 import de.dbtool.database.interfaces.IDatabase;
 import de.dbtool.exceptions.DbToolException;
 import de.dbtool.utils.SearchUtils;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.regex.Pattern;
 
 public class QueryProcessor {
     private Query query;
@@ -16,7 +17,7 @@ public class QueryProcessor {
     private final IDatabase db;
 
     private Set<String> tables = new HashSet<>();
-    private Set<String> columns = new HashSet<>();
+    private Map<String, Set<String>> columns = new HashMap<>();
 
     public QueryProcessor(IDatabase db, Query query) throws DbToolException {
         this.db = db;
@@ -47,6 +48,44 @@ public class QueryProcessor {
 
         if(query.getTableRegex() == null && query.getTablePatterns() == null) {
             tables.addAll(db.getAllDatabaseTables());
+        }
+
+        // Find matching column names
+        for (String table : tables) {
+
+            columns.put(table, new HashSet<>());
+            List<String> columnNames = this.db.getTableColumns(table);
+
+            if (query.getColumnPatterns() != null) {
+                for (ColumnPatternOption columnPattern : query.getColumnPatterns()) {
+                    String regex = String.join(".*", Arrays.stream(columnPattern.getOption().split("\\*")).map(Pattern::quote).toList());
+                    try {
+                        columns.get(table).addAll(SearchUtils.getMatchingStrings(columnNames, regex));
+                    } catch (Exception e) {
+                        throw new DbToolException("Something is wrong with your regex: " + e.getMessage());
+                    }
+                }
+            }
+
+            if (query.getTableRegex() != null) {
+                for (ColumnRegexOption regex : query.getColumnRegex()) {
+                    try {
+                        columns.get(table).addAll(SearchUtils.getMatchingStrings(columnNames, regex.getOption()));
+                    } catch (Exception e) {
+                        throw new DbToolException("Something is wrong with your regex: " + e.getMessage());
+                    }
+                }
+            }
+
+            if (query.getColumnRegex() == null && query.getColumnPatterns() == null) {
+                // TODO: add all columns? or just detect this case later and perform a `select * from ...`
+            }
+        }
+
+        for (String table : tables) {
+            for (String column : columns.get(table)) {
+                List<String> values = this.db.getColumnValues(table, column);
+            }
         }
 
         System.out.println(tables.toString());
