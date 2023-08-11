@@ -13,5 +13,7 @@ public interface IDatabase {
 
     List<String> getTableColumns(String tableName) throws DbToolException;
 
+    List<String> getTableColumns(String tableName, String pattern) throws DbToolException;
+
     List<String> getColumnValues(String tableName, String columnName) throws DbToolException;
 }

@@ -63,7 +63,34 @@ public class DefaultDatabase implements IDatabase {
 
     @Override
     public List<String> getTableColumns(String tableName) throws DbToolException {
-        return null;
+        List<String> returnList = new ArrayList<>();
+        try {
+            DatabaseMetaData metadata = connection.getMetaData();
+            ResultSet resultSet = metadata.getColumns(null, null, tableName, null);
+            while (resultSet.next()) {
+                returnList.add(resultSet.getString("COLUMN_NAME"));
+            }
+        } catch (SQLException e) {
+            throw new DbToolException("Error getting columns: " + e.getMessage());
+        }
+
+        return returnList;
+    }
+
+    @Override
+    public List<String> getTableColumns(String tableName, String pattern) throws DbToolException {
+        List<String> returnList = new ArrayList<>();
+        try {
+            DatabaseMetaData metadata = connection.getMetaData();
+            ResultSet resultSet = metadata.getColumns(null, null, tableName, pattern);
+            while (resultSet.next()) {
+                returnList.add(resultSet.getString("COLUMN_NAME"));
+            }
+        } catch (SQLException e) {
+            throw new DbToolException("Error getting columns: " + e.getMessage());
+        }
+
+        return returnList;
     }
 
     @Override

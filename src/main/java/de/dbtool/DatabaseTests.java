@@ -19,7 +19,7 @@ public class DatabaseTests {
         System.setErr(new PrintStream(baos));
 
         try (ApplicationContext ctx = ApplicationContext.run(Environment.CLI, Environment.TEST)) {
-            String[] cli_args = new String[]{"grep", "-p", "mysql"};
+            String[] cli_args = new String[]{"grep", "-p", "mysql", "-tp", "f*"};
             PicocliRunner.run(DbToolCommand.class, ctx, cli_args);
 
             // Set to default again
