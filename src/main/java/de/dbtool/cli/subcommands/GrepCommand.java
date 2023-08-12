@@ -45,6 +45,9 @@ public class GrepCommand implements Runnable {
     @CommandLine.ArgGroup(exclusive = false, multiplicity = "0..*", heading = "Table content/value pattern options")
     private List<ValuePatternOption> valuePatternOptions;
 
+    @CommandLine.ArgGroup(exclusive = false, multiplicity = "0..*", heading = "Table content/value compare options")
+    private List<ValueCompareOption> valueCompareOptions;
+
     @CommandLine.ArgGroup(exclusive = false, multiplicity = "0..*", heading = "Table content/value regex options")
     private List<ValueRegexOption> valueRegexOptions;
 
@@ -84,7 +87,7 @@ public class GrepCommand implements Runnable {
 
             System.out.println("Using profile: " + profile.name);
 
-            Query query = new Query(tablePatternOptions, tableRegexOptions, columnPatternOptions, columnRegexOptions, valuePatternOptions, valueRegexOptions);
+            Query query = new Query(tablePatternOptions, tableRegexOptions, columnPatternOptions, columnRegexOptions, valuePatternOptions, valueCompareOptions, valueRegexOptions);
             IDatabase database = DatabaseFactory.getDatabaseType(profile);
             QueryProcessor queryProcessor = new QueryProcessor(database, query);
             List<String[]> result = queryProcessor.executeQuery();

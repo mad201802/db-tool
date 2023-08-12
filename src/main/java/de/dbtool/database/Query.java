@@ -10,14 +10,20 @@ public class Query {
     private List<ColumnPatternOption> columnPatterns;
     private List<ColumnRegexOption> columnRegex;
     private List<ValuePatternOption> valuePatterns;
+    private List<ValueCompareOption> valueCompares;
     private List<ValueRegexOption> valueRegex;
 
-    public Query(List<TablePatternOption> tablePatterns, List<TableRegexOption> tableRegexOptions, List<ColumnPatternOption> columnPatternOptions, List<ColumnRegexOption> columnRegexOptions, List<ValuePatternOption> valuePatternOptions, List<ValueRegexOption> valueRegexOptions) {
+    public Query(List<TablePatternOption> tablePatterns, List<TableRegexOption> tableRegexOptions,
+                 List<ColumnPatternOption> columnPatternOptions, List<ColumnRegexOption> columnRegexOptions,
+                 List<ValuePatternOption> valuePatternOptions, List<ValueCompareOption> valueCompareOptions,
+                 List<ValueRegexOption> valueRegexOptions
+    ) {
         this.tablePatterns = tablePatterns;
         this.tableRegex = tableRegexOptions;
         this.columnPatterns = columnPatternOptions;
         this.columnRegex = columnRegexOptions;
         this.valuePatterns = valuePatternOptions;
+        this.valueCompares = valueCompareOptions;
         this.valueRegex = valueRegexOptions;
     }
 
@@ -60,15 +66,19 @@ public class Query {
         return valuePatterns;
     }
 
-    public void setValuePatterns(List<ValuePatternOption> valuePatterns) {
-        this.valuePatterns = valuePatterns;
-    }
-
     public List<ValueRegexOption> getValueRegex() {
         return valueRegex;
     }
 
     public void setValueRegex(List<ValueRegexOption> valueRegex) {
         this.valueRegex = valueRegex;
+    }
+
+    public List<ValueCompareOption> getValueCompares() {
+        return valueCompares;
+    }
+
+    public void setValueCompares(List<ValueCompareOption> valueCompares) {
+        this.valueCompares = valueCompares;
     }
 }

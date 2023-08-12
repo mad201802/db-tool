@@ -6,17 +6,17 @@ import de.dbtool.cli.subcommands.containers.TablePatternOption;
 import de.dbtool.cli.subcommands.containers.TableRegexOption;
 import de.dbtool.database.interfaces.IDatabase;
 import de.dbtool.exceptions.DbToolException;
+import de.dbtool.files.schemas.Profile;
 import de.dbtool.utils.SearchUtils;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class QueryProcessor {
     private Query query;
 
     private final IDatabase db;
-
-    private final Set<String> tables = new HashSet<>();
-    private final Map<String, Set<String>> columns = new HashMap<>();
+    private final Map<String, Map<String, List<String>>> values = new HashMap<>();
 
     public QueryProcessor(IDatabase db, Query query) throws DbToolException {
         this.db = db;
@@ -26,6 +26,9 @@ public class QueryProcessor {
     public List<String[]> executeQuery() throws DbToolException {
         if (query == null) throw new RuntimeException("Query is null");
         this.db.connect();
+
+        Set<String> tables = new HashSet<>();
+        Map<String, Set<String>> columns = new HashMap<>();
 
         if(query.getTablePatterns() != null) {
             for(TablePatternOption tablePattern : query.getTablePatterns()) {
@@ -79,8 +82,59 @@ public class QueryProcessor {
             columns.put(table, columnNames);
         }
 
-        System.out.println(tables.toString());
-        System.out.println(columns.toString());
+        for (String t : tables) {
+            List<List<String>> res = db.getValues(
+                    t, columns.get(t),
+                    query.getValuePatterns() != null ? query.getValuePatterns().stream().map(v -> v.getOption().replace("*", "%")).collect(Collectors.toList()) : new ArrayList<>(),
+                    query.getValueCompares() != null ? query.getValueCompares().stream().map(v -> v.getOption()).collect(Collectors.toList()) : new ArrayList<>(),
+                    Optional.empty()
+            );
+
+            // TODO actually print results
+            System.out.println("Table " + t + ": " + res.size() + " Row(s) found");
+            System.out.println("=====================================================================================");
+            for (List<String> row : res) {
+                System.out.println(String.join(", ", row));
+            }
+            System.out.println("=====================================================================================");
+            System.out.println("");
+
+//            List<String[]> tableData = new ArrayList<>(res.size());
+//            tableData.add(new String[] {"Name", "Hostname", "Port", "Database", "Username", "Password", "Type", "Driver"});
+//            for(Profile p : profiles) {
+//                tableData.add(new String[] {p.name, p.hostname, Integer.toString(p.port), p.dbName, p.username, tablePrinter.censorPassword(p.password), p.type.toString(), p.driverPath});
+//            }
+//            System.out.println(t + ":");
+            // | TableName | ColumnName | Value |
+            // -----------------------------------
+            // | Mensch    | Name       | Andre |
+            // | Mixer     | Leistung   | 50    |
+            //
+        }
+
+        for (String currentTable : tables) {
+            Set<String> currentColumns = columns.get(currentTable);
+            for(String column : currentColumns) {
+                if (query.getValuePatterns() != null) {
+                    //TODO
+                }
+
+                if (query.getValueCompares() != null) {
+                    //TODO
+                }
+
+                if (query.getValueRegex() != null) {
+                    // TODO
+                }
+
+                if (query.getColumnRegex() == null && query.getColumnPatterns() == null) {
+                    // TODO
+                }
+            }
+        }
+
+//        System.out.println(tables.toString());
+//        System.out.println(columns.toString());
 
         return null;
     }
