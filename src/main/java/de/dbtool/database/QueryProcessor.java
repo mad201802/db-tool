@@ -51,7 +51,7 @@ public class QueryProcessor {
 
         // Find matching column names
         for (String table : tables) {
-            List<String> columnNames = new ArrayList<>();
+            Set<String> columnNames = new HashSet<>();
 
             if (query.getColumnPatterns() != null) {
                 for (ColumnPatternOption columnPattern : query.getColumnPatterns()) {
@@ -76,7 +76,7 @@ public class QueryProcessor {
                 columnNames.addAll(db.getTableColumns(table));
             }
 
-            columns.put(table, new HashSet<>(columnNames));
+            columns.put(table, columnNames);
         }
 
         System.out.println(tables.toString());
