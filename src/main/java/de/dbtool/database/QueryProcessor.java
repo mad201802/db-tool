@@ -1,22 +1,22 @@
 package de.dbtool.database;
 
+import de.dbtool.cli.subcommands.containers.ColumnPatternOption;
+import de.dbtool.cli.subcommands.containers.ColumnRegexOption;
 import de.dbtool.cli.subcommands.containers.TablePatternOption;
 import de.dbtool.cli.subcommands.containers.TableRegexOption;
 import de.dbtool.database.interfaces.IDatabase;
 import de.dbtool.exceptions.DbToolException;
 import de.dbtool.utils.SearchUtils;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class QueryProcessor {
     private Query query;
 
     private final IDatabase db;
 
-    private Set<String> tables = new HashSet<>();
-    private Set<String> columns = new HashSet<>();
+    private final Set<String> tables = new HashSet<>();
+    private final Map<String, Set<String>> columns = new HashMap<>();
 
     public QueryProcessor(IDatabase db, Query query) throws DbToolException {
         this.db = db;
@@ -49,7 +49,38 @@ public class QueryProcessor {
             tables.addAll(db.getAllDatabaseTables());
         }
 
+        // Find matching column names
+        for (String table : tables) {
+            Set<String> columnNames = new HashSet<>();
+
+            if (query.getColumnPatterns() != null) {
+                for (ColumnPatternOption columnPattern : query.getColumnPatterns()) {
+                    String likePattern = columnPattern.getOption().replace("*", "%");
+                    columnNames.addAll(db.getTableColumns(table, likePattern));
+                }
+            }
+
+            if (query.getColumnRegex() != null) {
+                List<String> allColumns = this.db.getTableColumns(table);
+
+                for (ColumnRegexOption regex : query.getColumnRegex()) {
+                    try {
+                        columnNames.addAll(SearchUtils.getMatchingStrings(allColumns, regex.getOption()));
+                    } catch (Exception e) {
+                        throw new DbToolException("Something is wrong with your regex: " + e.getMessage());
+                    }
+                }
+            }
+
+            if (query.getColumnRegex() == null && query.getColumnPatterns() == null) {
+                columnNames.addAll(db.getTableColumns(table));
+            }
+
+            columns.put(table, columnNames);
+        }
+
         System.out.println(tables.toString());
+        System.out.println(columns.toString());
 
         return null;
     }
