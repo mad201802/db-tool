@@ -1,6 +1,8 @@
 name: Build DB Grep Tool
 
-on: [push]
+on:
+  push:
+    branches: ["main"]
 
 jobs:
   build:

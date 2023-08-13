@@ -3,8 +3,6 @@ name: Run Tests for DB Grep Tool
 on:
   pull_request:
     branches: ["develop", "main"]
-  push:
-    branches: ["feature/ci-cd"]
 
 jobs:
   test:
