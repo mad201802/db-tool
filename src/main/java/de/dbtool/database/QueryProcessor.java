@@ -88,6 +88,7 @@ public class QueryProcessor {
                     query.isValueCompareUseAnd(),
                     query.getLimitRows() > 0 ? Optional.of(query.getLimitRows()) : Optional.empty()
             );
+            if(values.size() == 0) continue;
 
             List<String[]> tableData = new ArrayList<>();
             tableData.add(columns.get(t).toArray(new String[0]));

@@ -6,7 +6,7 @@ import picocli.CommandLine;
  * Class to handle the value pattern option
  */
 public class ValuePatternOption implements IBaseOption {
-    @CommandLine.Option(names = {"-vp", "--value-pattern"}, description = "Define wildcard (like) pattern for table values")
+    @CommandLine.Option(names = {"-v", "-vp", "--value-pattern"}, description = "Define wildcard (like) pattern for table values")
     private String valuePattern;
 
     @Override

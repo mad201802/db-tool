@@ -62,6 +62,9 @@ public class GrepCommand implements Runnable {
     @CommandLine.Option(names = {"-lt", "--limit-text-length"}, description = "Limits the length of text in a column and display ellipsis", required = false)
     private int limitTextLength = -1;
 
+    @CommandLine.Option(names = {"--please-tell-me-everything"}, description = "Prints EVERYTHING", required = false)
+    private boolean verbose = false;
+
     @Override
     public void run() {
 
@@ -99,7 +102,7 @@ public class GrepCommand implements Runnable {
             }
 
             for(Map.Entry<String, List<String[]>> entry : result.entrySet()) {
-                System.out.println(tablePrinter.getTableString("Table " + entry.getKey() + ": " + entry.getValue().size() + " Row(s) found", entry.getValue()));
+                System.out.println(tablePrinter.getTableString("Table " + entry.getKey() + ": " + (entry.getValue().size()-1) + " Row(s) found", entry.getValue()));
             }
 
         } catch (DbToolException ex) {

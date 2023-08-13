@@ -30,7 +30,7 @@ public class TablePrinter {
     public String getTableString(String title, List<String[]> data) {
         String table = "";
 
-        if (title != null) table += "\n\n => " + title + "\n";
+        if (title != null) table += "\033[0;32m" + "\n\n => " + title + "\n" + "\033[0m";
         if (data.size() == 0) return "No data found";
 
         List<ColumnData<String[]>> columnData = new ArrayList<>();
@@ -42,8 +42,8 @@ public class TablePrinter {
             column.dataAlign(HorizontalAlign.CENTER);
             columnData.add(column.with(c -> c[finalI]));
         }
-
-        table += AsciiTable.getTable(data, columnData);
+        Character[] borderStyles = AsciiTable.FANCY_ASCII;
+        table += AsciiTable.getTable(borderStyles, data, columnData);
 
         return table;
     }

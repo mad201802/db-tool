@@ -110,7 +110,15 @@ public class DefaultDatabase implements IDatabase {
         }
 
         if(compares != null) {
-            compareClauses.addAll(compares);
+            for (String compare : compares) {
+                if (compare.matches("^\\s*[!=<>]")) {
+                    for (String col : columns) {
+                        compareClauses.add(col + compare);
+                    }
+                } else {
+                    compareClauses.add(compare);
+                }
+            }
         }
 
         if(patternClauses.size() > 0 || compareClauses.size() > 0) {
