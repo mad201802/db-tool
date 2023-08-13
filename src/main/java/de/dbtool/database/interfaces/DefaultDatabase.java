@@ -23,12 +23,20 @@ public class DefaultDatabase implements IDatabase {
 
     @Override
     public void connect() throws DbToolException {
-        System.out.println("Connecting to database: " + profile.hostname + ":" + profile.port + "/" + profile.dbName);
+        String url = "";
         Properties connectionProps = new Properties();
-        connectionProps.put("user", profile.username);
-        connectionProps.put("password", profile.password);
 
-        String url = "jdbc:" + this.databaseType + "://" + profile.hostname + ":" + profile.port + "/" + profile.dbName;
+        if(profile.type == SupportedDatabases.SQLITE) {
+            System.out.println("Reading database: " + profile.hostname);
+            url = "jdbc:sqlite:" + profile.hostname;
+        } else {
+            System.out.println("Connecting to database: " + profile.hostname + ":" + profile.port + "/" + profile.dbName);
+            connectionProps.put("user", profile.username);
+            connectionProps.put("password", profile.password);
+
+            url = "jdbc:" + this.databaseType + "://" + profile.hostname + ":" + profile.port + "/" + profile.dbName;
+        }
+
         try {
             connection = DriverManager.getConnection(url, connectionProps);
             System.out.println("Successfully connected to database!");
