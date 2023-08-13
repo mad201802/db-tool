@@ -3,7 +3,6 @@ package de.dbtool.database.interfaces;
 import de.dbtool.exceptions.DbToolException;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -18,5 +17,5 @@ public interface IDatabase {
 
     List<String> getTableColumns(String tableName, String pattern) throws DbToolException;
 
-    List<List<String>> getValues(String table, Set<String> columns, List<String> patterns, List<String> compares, Optional<Integer> limit) throws DbToolException ;
+    List<List<String>> getValues(String table, Set<String> columns, List<String> patterns, List<String> compares, boolean useAnd, Optional<Integer> limit) throws DbToolException ;
 }

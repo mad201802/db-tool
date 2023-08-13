@@ -50,11 +50,8 @@ public class GrepCommand implements Runnable {
     @CommandLine.ArgGroup(exclusive = false, multiplicity = "0..*", heading = "Table content/value compare options")
     private List<ValueCompareOption> valueCompareOptions;
 
-    @CommandLine.ArgGroup(exclusive = false, multiplicity = "0..*", heading = "Table content/value regex options")
-    private List<ValueRegexOption> valueRegexOptions;
-
-    @CommandLine.Option(names = {"-r", "--range"}, description = "Search for a range in table values", required = false)
-    private String rangeQuery;
+    @CommandLine.Option(names = {"--vc-use-and"}, description = "When using multiple value compare options, use AND instead of OR")
+    private boolean valueCompareUseAnd = false;
 
     @CommandLine.Option(names = {"-lc", "--limit-columns"}, description = "Limits the number of columns to display", required = false)
     private String limitColumnsQuery;
@@ -91,7 +88,7 @@ public class GrepCommand implements Runnable {
             System.out.println("Using profile: " + profile.name);
 
             System.out.println("Limit rows: " + limitRows);
-            Query query = new Query(tablePatternOptions, tableRegexOptions, columnPatternOptions, columnRegexOptions, valuePatternOptions, valueCompareOptions, valueRegexOptions, limitRows);
+            Query query = new Query(tablePatternOptions, tableRegexOptions, columnPatternOptions, columnRegexOptions, valuePatternOptions, valueCompareOptions, valueCompareUseAnd, limitRows);
             IDatabase database = DatabaseFactory.getDatabaseType(profile);
             QueryProcessor queryProcessor = new QueryProcessor(database, query);
 

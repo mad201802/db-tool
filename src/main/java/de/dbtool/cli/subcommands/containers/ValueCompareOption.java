@@ -6,7 +6,7 @@ import picocli.CommandLine;
  * Class to handle the value regex option
  */
 public class ValueCompareOption implements IBaseOption {
-    @CommandLine.Option(names = {"-vc", "--value-compare"}, description = "Compare a Number or Date using common operators like <,>,=,!=,<=,>=")
+    @CommandLine.Option(names = {"-vc", "--value-compare"}, description = "Compare a Number or Date using common operators like <,>,=,!=,<=,>= e.g. 'id > 100'")
     private String valueCompare;
 
     @Override

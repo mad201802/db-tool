@@ -91,7 +91,7 @@ public class DefaultDatabase implements IDatabase {
     }
 
     @Override
-    public List<List<String>> getValues(String table, Set<String> columns, List<String> patterns, List<String> compares, Optional<Integer> limitRows) throws DbToolException {
+    public List<List<String>> getValues(String table, Set<String> columns, List<String> patterns, List<String> compares, boolean useAnd, Optional<Integer> limitRows) throws DbToolException {
         final String columnSelection = columns.isEmpty() ? "*" : String.join(", ", columns);
 
         StringBuilder query = new StringBuilder();
@@ -110,27 +110,26 @@ public class DefaultDatabase implements IDatabase {
         }
 
         if(compares != null) {
-            for (String col : columns) {
-                for (String compare : compares) {
-                    compareClauses.add(col + compare);
-                }
-            }
+            compareClauses.addAll(compares);
         }
 
         if(patternClauses.size() > 0 || compareClauses.size() > 0) {
             query.append(" where ");
+            String joiner = useAnd ? " AND " : " OR ";
 
             if(patternClauses.size() > 0) {
-                query.append(String.join(" OR ", patternClauses));
+                query.append(String.join(joiner, patternClauses));
             }
 
             if(compareClauses.size() > 0) {
-                query.append(String.join(" OR ", compareClauses));
+                query.append(String.join(joiner, compareClauses));
             }
         }
 
         // add limit
         limitRows.ifPresent(integer -> query.append(" LIMIT ").append(integer));
+
+        System.out.println("Executing query: " + query.toString());
 
         try(Statement stmt = connection.createStatement()) {
             ResultSet rs = stmt.executeQuery(query.toString());

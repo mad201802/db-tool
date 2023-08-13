@@ -11,13 +11,13 @@ public class Query {
     private final List<ColumnRegexOption> columnRegex;
     private final List<ValuePatternOption> valuePatterns;
     private final List<ValueCompareOption> valueCompares;
-    private final List<ValueRegexOption> valueRegex;
+    private boolean valueCompareUseAnd;
     private final int limitRows;
 
     public Query(List<TablePatternOption> tablePatterns, List<TableRegexOption> tableRegexOptions,
                  List<ColumnPatternOption> columnPatternOptions, List<ColumnRegexOption> columnRegexOptions,
                  List<ValuePatternOption> valuePatternOptions, List<ValueCompareOption> valueCompareOptions,
-                 List<ValueRegexOption> valueRegexOptions, int limitRows
+                 boolean valueCompareUseAnd, int limitRows
     ) {
         this.tablePatterns = tablePatterns;
         this.tableRegex = tableRegexOptions;
@@ -25,7 +25,7 @@ public class Query {
         this.columnRegex = columnRegexOptions;
         this.valuePatterns = valuePatternOptions;
         this.valueCompares = valueCompareOptions;
-        this.valueRegex = valueRegexOptions;
+        this.valueCompareUseAnd = valueCompareUseAnd;
         this.limitRows = limitRows;
     }
 
@@ -49,14 +49,13 @@ public class Query {
         return valuePatterns;
     }
 
-    public List<ValueRegexOption> getValueRegex() {
-        return valueRegex;
-    }
-
     public List<ValueCompareOption> getValueCompares() {
         return valueCompares;
     }
 
+    public boolean isValueCompareUseAnd() {
+        return valueCompareUseAnd;
+    }
     public int getLimitRows() {
         return limitRows;
     }

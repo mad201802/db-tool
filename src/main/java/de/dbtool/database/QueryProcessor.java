@@ -85,6 +85,7 @@ public class QueryProcessor {
                     t, columns.get(t),
                     query.getValuePatterns() != null ? query.getValuePatterns().stream().map(v -> v.getOption().replace("*", "%")).collect(Collectors.toList()) : new ArrayList<>(),
                     query.getValueCompares() != null ? query.getValueCompares().stream().map(ValueCompareOption::getOption).collect(Collectors.toList()) : new ArrayList<>(),
+                    query.isValueCompareUseAnd(),
                     query.getLimitRows() > 0 ? Optional.of(query.getLimitRows()) : Optional.empty()
             );
 
