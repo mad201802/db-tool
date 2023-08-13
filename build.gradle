@@ -1,6 +1,8 @@
 plugins {
     id("com.github.johnrengelman.shadow") version "7.1.2"
     id("io.micronaut.application") version "3.7.4"
+    id("jacoco")
+
 }
 
 version = "0.1"
@@ -12,20 +14,46 @@ repositories {
 
 dependencies {
     annotationProcessor("info.picocli:picocli-codegen")
+
     implementation("info.picocli:picocli")
-    implementation("io.micronaut:micronaut-jackson-databind")
     implementation("io.micronaut.picocli:micronaut-picocli")
-    implementation("jakarta.annotation:jakarta.annotation-api")
+    implementation('com.google.code.gson:gson:2.10.1')
+
     runtimeOnly("ch.qos.logback:logback-classic")
-    implementation("io.micronaut:micronaut-validation")
 
-    testImplementation("io.micronaut:micronaut-http-client")
+    // https://mvnrepository.com/artifact/mysql/mysql-connector-java
+    implementation 'mysql:mysql-connector-java:8.0.32'
 
+    // https://mvnrepository.com/artifact/org.xerial/sqlite-jdbc
+    implementation 'org.xerial:sqlite-jdbc:3.41.2.1'
+
+    // https://mvnrepository.com/artifact/org.hibernate/hibernate-validator
+    implementation 'org.hibernate:hibernate-validator:8.0.0.Final'
+
+    // https://mvnrepository.com/artifact/org.glassfish/jakarta.el
+    implementation 'org.glassfish:jakarta.el:5.0.0-M1'
+
+
+    implementation 'com.github.freva:ascii-table:1.8.0'
 }
 
+test {
+    useJUnitPlatform()
+    finalizedBy jacocoTestReport // report is always generated after tests run
+}
+
+jacocoTestReport {
+    dependsOn test // tests are required to run before generating the report
+
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [], includes: ["de/dbtool/**"])
+        }))
+    }
+}
 
 application {
-    mainClass.set("de.dbtool.DbToolCommand")
+    mainClass.set("de.dbtool.Main")
 }
 java {
     sourceCompatibility = JavaVersion.toVersion("17")
