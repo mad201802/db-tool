@@ -5,18 +5,19 @@ import de.dbtool.cli.subcommands.containers.*;
 import java.util.List;
 
 public class Query {
-    private List<TablePatternOption> tablePatterns;
-    private List<TableRegexOption> tableRegex;
-    private List<ColumnPatternOption> columnPatterns;
-    private List<ColumnRegexOption> columnRegex;
-    private List<ValuePatternOption> valuePatterns;
-    private List<ValueCompareOption> valueCompares;
-    private List<ValueRegexOption> valueRegex;
+    private final List<TablePatternOption> tablePatterns;
+    private final List<TableRegexOption> tableRegex;
+    private final List<ColumnPatternOption> columnPatterns;
+    private final List<ColumnRegexOption> columnRegex;
+    private final List<ValuePatternOption> valuePatterns;
+    private final List<ValueCompareOption> valueCompares;
+    private final List<ValueRegexOption> valueRegex;
+    private final int limitRows;
 
     public Query(List<TablePatternOption> tablePatterns, List<TableRegexOption> tableRegexOptions,
                  List<ColumnPatternOption> columnPatternOptions, List<ColumnRegexOption> columnRegexOptions,
                  List<ValuePatternOption> valuePatternOptions, List<ValueCompareOption> valueCompareOptions,
-                 List<ValueRegexOption> valueRegexOptions
+                 List<ValueRegexOption> valueRegexOptions, int limitRows
     ) {
         this.tablePatterns = tablePatterns;
         this.tableRegex = tableRegexOptions;
@@ -25,41 +26,23 @@ public class Query {
         this.valuePatterns = valuePatternOptions;
         this.valueCompares = valueCompareOptions;
         this.valueRegex = valueRegexOptions;
-    }
-
-    public Query() {
+        this.limitRows = limitRows;
     }
 
     public List<TablePatternOption> getTablePatterns() {
         return tablePatterns;
     }
 
-    public void setTablePatterns(List<TablePatternOption> tablePatterns) {
-        this.tablePatterns = tablePatterns;
-    }
-
     public List<TableRegexOption> getTableRegex() {
         return tableRegex;
-    }
-
-    public void setTableRegex(List<TableRegexOption> tableRegex) {
-        this.tableRegex = tableRegex;
     }
 
     public List<ColumnPatternOption> getColumnPatterns() {
         return columnPatterns;
     }
 
-    public void setColumnPatterns(List<ColumnPatternOption> columnPatterns) {
-        this.columnPatterns = columnPatterns;
-    }
-
     public List<ColumnRegexOption> getColumnRegex() {
         return columnRegex;
-    }
-
-    public void setColumnRegex(List<ColumnRegexOption> columnRegex) {
-        this.columnRegex = columnRegex;
     }
 
     public List<ValuePatternOption> getValuePatterns() {
@@ -70,15 +53,11 @@ public class Query {
         return valueRegex;
     }
 
-    public void setValueRegex(List<ValueRegexOption> valueRegex) {
-        this.valueRegex = valueRegex;
-    }
-
     public List<ValueCompareOption> getValueCompares() {
         return valueCompares;
     }
 
-    public void setValueCompares(List<ValueCompareOption> valueCompares) {
-        this.valueCompares = valueCompares;
+    public int getLimitRows() {
+        return limitRows;
     }
 }

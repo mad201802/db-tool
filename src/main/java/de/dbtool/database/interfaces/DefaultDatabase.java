@@ -90,34 +90,47 @@ public class DefaultDatabase implements IDatabase {
         return returnList;
     }
 
-//    @Override
-//    public List<String> getColumnValues(String tableName, String columnName) throws DbToolException {
-//        return null;
-//    }
-
     @Override
-    public List<List<String>> getValues(String table, Set<String> columns, List<String> patterns, List<String> compares, Optional<Integer> limit) throws DbToolException {
+    public List<List<String>> getValues(String table, Set<String> columns, List<String> patterns, List<String> compares, Optional<Integer> limitRows) throws DbToolException {
         final String columnSelection = columns.isEmpty() ? "*" : String.join(", ", columns);
 
         StringBuilder query = new StringBuilder();
         query.append("select ").append(columnSelection).append(" from ").append(table);
 
+        List<String> patternClauses = new ArrayList<>();
+        List<String> compareClauses = new ArrayList<>();
+
         // Generate where clause
-        List<String> clauses = new ArrayList<>();
-        for (String col : columns) {
-            for (String pattern : patterns) {
-                clauses.add(col + " LIKE " + "'" + pattern + "'");
-            }
-            for (String compare : compares) {
-                clauses.add(col + compare);
+        if(patterns != null) {
+            for (String col : columns) {
+                for (String pattern : patterns) {
+                    patternClauses.add(col + " LIKE " + "'" + pattern + "'");
+                }
             }
         }
-        query.append(" where ").append(String.join(" OR ", clauses));
+
+        if(compares != null) {
+            for (String col : columns) {
+                for (String compare : compares) {
+                    compareClauses.add(col + compare);
+                }
+            }
+        }
+
+        if(patternClauses.size() > 0 || compareClauses.size() > 0) {
+            query.append(" where ");
+
+            if(patternClauses.size() > 0) {
+                query.append(String.join(" OR ", patternClauses));
+            }
+
+            if(compareClauses.size() > 0) {
+                query.append(String.join(" OR ", compareClauses));
+            }
+        }
 
         // add limit
-        limit.ifPresent(integer -> query.append(" LIMIT ").append(integer));
-
-        System.out.println(query);
+        limitRows.ifPresent(integer -> query.append(" LIMIT ").append(integer));
 
         try(Statement stmt = connection.createStatement()) {
             ResultSet rs = stmt.executeQuery(query.toString());
