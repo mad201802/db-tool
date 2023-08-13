@@ -1,6 +1,10 @@
-name: Build DB Grep Tool
+name: Run Tests for DB Grep Tool
 
-on: [push]
+on:
+  pull_request:
+    branches: ["develop", "main"]
+  push:
+    branches: ["*"]
 
 jobs:
   build:
@@ -15,9 +19,4 @@ jobs:
           java-version: '17'
           cache: 'gradle'
       - run: chmod +x ./gradlew
-      - run: ./gradlew build --no-daemon
-      - name: Archive package artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: release
-          path: 'build/libs/*-all.jar'
+      - run: ./gradlew test --no-daemon
