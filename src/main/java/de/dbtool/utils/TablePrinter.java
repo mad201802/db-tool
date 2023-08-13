@@ -4,20 +4,21 @@ import com.github.freva.asciitable.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Utility class to print tables
  */
 public class TablePrinter {
-    private final int limitTextLength;
+    private final int defaultLimitTextLength;
 
     /**
      * Creates a new instance of TablePrinter.
      *
-     * @param limitTextLength The maximum length of a text in a cell. If the text is longer, it will be truncated.
+     * @param defaultLimitTextLength The maximum length of a text in a cell. If the text is longer, it will be truncated.
      */
-    public TablePrinter(int limitTextLength) {
-        this.limitTextLength = limitTextLength;
+    public TablePrinter(int defaultLimitTextLength) {
+        this.defaultLimitTextLength = defaultLimitTextLength;
     }
 
     /**
@@ -25,10 +26,12 @@ public class TablePrinter {
      *
      * @param title The title of the table
      * @param data  The data to be displayed in the table
+     * @param tempLimitTextLength OPTIONAL: The maximum length of a text in a cell. If the text is longer, it will be truncated. If not defined, the default value that was passed to the constructor will be used.
      * @return The ascii table as a string
      */
-    public String getTableString(String title, List<String[]> data) {
+    public String getTableString(String title, List<String[]> data, Optional<Integer> tempLimitTextLength) {
         String table = "";
+        int limitTextLength = tempLimitTextLength.isPresent() ? tempLimitTextLength.get() : this.defaultLimitTextLength;
 
         if (title != null) table += "\n\n => " + title + "\n";
         if (data.size() == 0) return "No data found";
@@ -38,7 +41,7 @@ public class TablePrinter {
             int finalI = i;
 
             Column column = new Column();
-            if (this.limitTextLength > 0) column.maxWidth(this.limitTextLength, OverflowBehaviour.ELLIPSIS_RIGHT);
+            if (limitTextLength > 0) column.maxWidth(this.defaultLimitTextLength, OverflowBehaviour.ELLIPSIS_RIGHT);
             column.dataAlign(HorizontalAlign.CENTER);
             columnData.add(column.with(c -> c[finalI]));
         }

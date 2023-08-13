@@ -12,6 +12,7 @@ import jakarta.validation.constraints.NotBlank;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -39,7 +40,7 @@ public class ListProfilesCommand implements Runnable {
 
         try {
             ProfileHandler profileHandler = new ProfileHandler();
-            TablePrinter tablePrinter = new TablePrinter(12);
+            TablePrinter tablePrinter = new TablePrinter(16);
 
             Profile[] profiles = profileHandler.listProfiles();
             if(profiles == null || profiles.length == 0) {
@@ -53,7 +54,7 @@ public class ListProfilesCommand implements Runnable {
             }
 
             System.out.println("Available profiles:");
-            String table = tablePrinter.getTableString("Profiles",tableData );
+            String table = tablePrinter.getTableString("Profiles",tableData , Optional.empty());
             System.out.println(table);
 
         } catch (Exception ex) {
