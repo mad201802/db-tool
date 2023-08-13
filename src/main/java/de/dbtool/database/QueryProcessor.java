@@ -8,6 +8,7 @@ import de.dbtool.database.interfaces.IDatabase;
 import de.dbtool.exceptions.DbToolException;
 import de.dbtool.files.schemas.Profile;
 import de.dbtool.utils.SearchUtils;
+import de.dbtool.utils.TablePrinter;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -17,6 +18,7 @@ public class QueryProcessor {
 
     private final IDatabase db;
     private final Map<String, Map<String, List<String>>> values = new HashMap<>();
+    private final TablePrinter tablePrinter = new TablePrinter(20);
 
     public QueryProcessor(IDatabase db, Query query) throws DbToolException {
         this.db = db;
@@ -91,25 +93,22 @@ public class QueryProcessor {
             );
 
             // TODO actually print results
-            System.out.println("Table " + t + ": " + res.size() + " Row(s) found");
-            System.out.println("=====================================================================================");
-            for (List<String> row : res) {
-                System.out.println(String.join(", ", row));
-            }
-            System.out.println("=====================================================================================");
-            System.out.println("");
-
-//            List<String[]> tableData = new ArrayList<>(res.size());
-//            tableData.add(new String[] {"Name", "Hostname", "Port", "Database", "Username", "Password", "Type", "Driver"});
-//            for(Profile p : profiles) {
-//                tableData.add(new String[] {p.name, p.hostname, Integer.toString(p.port), p.dbName, p.username, tablePrinter.censorPassword(p.password), p.type.toString(), p.driverPath});
+//            System.out.println("Table " + t + ": " + res.size() + " Row(s) found");
+//            System.out.println("=====================================================================================");
+//            for (List<String> row : res) {
+//                System.out.println(String.join(", ", row));
 //            }
-//            System.out.println(t + ":");
-            // | TableName | ColumnName | Value |
-            // -----------------------------------
-            // | Mensch    | Name       | Andre |
-            // | Mixer     | Leistung   | 50    |
-            //
+//            System.out.println("=====================================================================================");
+//            System.out.println("");
+
+            List<String[]> tableData = new ArrayList<>(res.size());
+            tableData.add(columns.get(t).toArray(new String[0]));
+            for(List<String> row : res) {
+                tableData.add(row.toArray(new String[0]));
+            }
+            // TODO: Implement --no-trunctate option (add second case where Optional.empty() has been replaced
+            //  with Optional.of(0) or something like that because 0 means no truncation)
+            System.out.println(tablePrinter.getTableString("Table " + t + ": " + res.size() + " Row(s) found", tableData, Optional.empty()));
         }
 
         for (String currentTable : tables) {
