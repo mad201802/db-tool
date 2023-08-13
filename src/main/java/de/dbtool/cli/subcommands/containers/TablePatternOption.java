@@ -6,7 +6,7 @@ import picocli.CommandLine;
  * Class to handle the table pattern option
  */
 public class TablePatternOption implements IBaseOption {
-    @CommandLine.Option(names = {"-tp", "--table-pattern"}, description = "Define wildcard (like) pattern for table names")
+    @CommandLine.Option(names = {"-t", "-tp", "--table-pattern"}, description = "Define wildcard (like) pattern for table names")
     private String tablePattern;
 
     @Override

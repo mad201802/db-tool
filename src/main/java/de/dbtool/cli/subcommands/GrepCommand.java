@@ -8,6 +8,7 @@ import de.dbtool.database.interfaces.IDatabase;
 import de.dbtool.exceptions.DbToolException;
 import de.dbtool.files.ProfileHandler;
 import de.dbtool.files.schemas.Profile;
+import de.dbtool.utils.TablePrinter;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
@@ -15,6 +16,7 @@ import jakarta.validation.constraints.NotBlank;
 import picocli.CommandLine;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -45,20 +47,23 @@ public class GrepCommand implements Runnable {
     @CommandLine.ArgGroup(exclusive = false, multiplicity = "0..*", heading = "Table content/value pattern options")
     private List<ValuePatternOption> valuePatternOptions;
 
-    @CommandLine.ArgGroup(exclusive = false, multiplicity = "0..*", heading = "Table content/value regex options")
-    private List<ValueRegexOption> valueRegexOptions;
+    @CommandLine.ArgGroup(exclusive = false, multiplicity = "0..*", heading = "Table content/value compare options")
+    private List<ValueCompareOption> valueCompareOptions;
 
-    @CommandLine.Option(names = {"-r", "--range"}, description = "Search for a range in table values", required = false)
-    private String rangeQuery;
+    @CommandLine.Option(names = {"--vc-use-and"}, description = "When using multiple value compare options, use AND instead of OR")
+    private boolean valueCompareUseAnd = false;
 
     @CommandLine.Option(names = {"-lc", "--limit-columns"}, description = "Limits the number of columns to display", required = false)
     private String limitColumnsQuery;
 
     @CommandLine.Option(names = {"-lr", "--limit-rows"}, description = "Limits the number of rows to display", required = false)
-    private int limitRows;
+    private int limitRows = -1;
 
     @CommandLine.Option(names = {"-lt", "--limit-text-length"}, description = "Limits the length of text in a column and display ellipsis", required = false)
-    private int limitTextLength;
+    private int limitTextLength = -1;
+
+    @CommandLine.Option(names = {"--please-tell-me-everything"}, description = "Prints EVERYTHING", required = false)
+    private boolean verbose = false;
 
     @Override
     public void run() {
@@ -79,15 +84,26 @@ public class GrepCommand implements Runnable {
         try {
             ProfileHandler profileHandler = new ProfileHandler();
             Profile profile = profileHandler.getProfile(profileName);
+            TablePrinter tablePrinter = new TablePrinter(limitTextLength);
 
             if (profile == null) throw new DbToolException("Profile not found");
 
             System.out.println("Using profile: " + profile.name);
 
-            Query query = new Query(tablePatternOptions, tableRegexOptions, columnPatternOptions, columnRegexOptions, valuePatternOptions, valueRegexOptions);
+            System.out.println("Limit rows: " + limitRows);
+            Query query = new Query(tablePatternOptions, tableRegexOptions, columnPatternOptions, columnRegexOptions, valuePatternOptions, valueCompareOptions, valueCompareUseAnd, limitRows);
             IDatabase database = DatabaseFactory.getDatabaseType(profile);
             QueryProcessor queryProcessor = new QueryProcessor(database, query);
-            List<String[]> result = queryProcessor.executeQuery();
+
+            Map<String, List<String[]>> result = queryProcessor.executeQuery();
+            if(result.isEmpty()) {
+                System.out.println("No results found in database");
+                return;
+            }
+
+            for(Map.Entry<String, List<String[]>> entry : result.entrySet()) {
+                System.out.println(tablePrinter.getTableString("Table " + entry.getKey() + ": " + (entry.getValue().size()-1) + " Row(s) found", entry.getValue()));
+            }
 
         } catch (DbToolException ex) {
             System.err.println("Error: " + ex.getMessage());

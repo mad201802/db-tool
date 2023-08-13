@@ -9,15 +9,15 @@ import java.util.List;
  * Utility class to print tables
  */
 public class TablePrinter {
-    private final int limitTextLength;
+    private final int defaultLimitTextLength;
 
     /**
      * Creates a new instance of TablePrinter.
      *
-     * @param limitTextLength The maximum length of a text in a cell. If the text is longer, it will be truncated.
+     * @param defaultLimitTextLength The maximum length of a text in a cell. If the text is longer, it will be truncated.
      */
-    public TablePrinter(int limitTextLength) {
-        this.limitTextLength = limitTextLength;
+    public TablePrinter(int defaultLimitTextLength) {
+        this.defaultLimitTextLength = defaultLimitTextLength;
     }
 
     /**
@@ -30,7 +30,7 @@ public class TablePrinter {
     public String getTableString(String title, List<String[]> data) {
         String table = "";
 
-        if (title != null) table += "\n\n => " + title + "\n";
+        if (title != null) table += "\033[0;32m" + "\n\n => " + title + "\n" + "\033[0m";
         if (data.size() == 0) return "No data found";
 
         List<ColumnData<String[]>> columnData = new ArrayList<>();
@@ -38,12 +38,12 @@ public class TablePrinter {
             int finalI = i;
 
             Column column = new Column();
-            if (this.limitTextLength > 0) column.maxWidth(this.limitTextLength, OverflowBehaviour.ELLIPSIS_RIGHT);
+            if (this.defaultLimitTextLength > 0) column.maxWidth(this.defaultLimitTextLength, OverflowBehaviour.ELLIPSIS_RIGHT);
             column.dataAlign(HorizontalAlign.CENTER);
             columnData.add(column.with(c -> c[finalI]));
         }
-
-        table += AsciiTable.getTable(data, columnData);
+        Character[] borderStyles = AsciiTable.FANCY_ASCII;
+        table += AsciiTable.getTable(borderStyles, data, columnData);
 
         return table;
     }

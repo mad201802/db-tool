@@ -1,31 +1,29 @@
 package de.dbtool.database;
 
-import de.dbtool.cli.subcommands.containers.ColumnPatternOption;
-import de.dbtool.cli.subcommands.containers.ColumnRegexOption;
-import de.dbtool.cli.subcommands.containers.TablePatternOption;
-import de.dbtool.cli.subcommands.containers.TableRegexOption;
+import de.dbtool.cli.subcommands.containers.*;
 import de.dbtool.database.interfaces.IDatabase;
 import de.dbtool.exceptions.DbToolException;
 import de.dbtool.utils.SearchUtils;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class QueryProcessor {
     private Query query;
 
     private final IDatabase db;
 
-    private final Set<String> tables = new HashSet<>();
-    private final Map<String, Set<String>> columns = new HashMap<>();
-
     public QueryProcessor(IDatabase db, Query query) throws DbToolException {
         this.db = db;
         this.query = query;
     }
 
-    public List<String[]> executeQuery() throws DbToolException {
+    public Map<String, List<String[]>> executeQuery() throws DbToolException {
         if (query == null) throw new RuntimeException("Query is null");
         this.db.connect();
+
+        Set<String> tables = new HashSet<>();
+        Map<String, Set<String>> columns = new HashMap<>();
 
         if(query.getTablePatterns() != null) {
             for(TablePatternOption tablePattern : query.getTablePatterns()) {
@@ -79,18 +77,30 @@ public class QueryProcessor {
             columns.put(table, columnNames);
         }
 
-        System.out.println(tables.toString());
-        System.out.println(columns.toString());
+        Map<String, List<String[]>> result = new HashMap<>();
+        for (String t : tables) {
+            if(columns.get(t).size() == 0) continue;
 
-        return null;
+            List<List<String>> values = db.getValues(
+                    t, columns.get(t),
+                    query.getValuePatterns() != null ? query.getValuePatterns().stream().map(v -> v.getOption().replace("*", "%")).collect(Collectors.toList()) : new ArrayList<>(),
+                    query.getValueCompares() != null ? query.getValueCompares().stream().map(ValueCompareOption::getOption).collect(Collectors.toList()) : new ArrayList<>(),
+                    query.isValueCompareUseAnd(),
+                    query.getLimitRows() > 0 ? Optional.of(query.getLimitRows()) : Optional.empty()
+            );
+            if(values.size() == 0) continue;
+
+            List<String[]> tableData = new ArrayList<>();
+            tableData.add(columns.get(t).toArray(new String[0]));
+            for(List<String> row : values) {
+                tableData.add(row.toArray(new String[0]));
+            }
+
+            // TODO: Implement --no-trunctate option (add second case where Optional.empty() has been replaced
+            //  with Optional.of(0) or something like that because 0 means no truncation)
+            result.put(t, tableData);
+        }
+
+        return result;
     }
-
-    public void setQuery(Query query) {
-        this.query = query;
-    }
-
-    public Query getQuery() {
-        return query;
-    }
-
 }

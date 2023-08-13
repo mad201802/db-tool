@@ -7,9 +7,7 @@ import de.dbtool.files.schemas.Profile;
 import de.dbtool.utils.ASCIIArt;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 public class DefaultDatabase implements IDatabase {
 
@@ -89,13 +87,77 @@ public class DefaultDatabase implements IDatabase {
         } catch (SQLException e) {
             throw new DbToolException("Error getting columns: " + e.getMessage());
         }
-
         return returnList;
     }
 
     @Override
-    public List<String> getColumnValues(String tableName, String columnName) throws DbToolException {
-        return null;
+    public List<List<String>> getValues(String table, Set<String> columns, List<String> patterns, List<String> compares, boolean useAnd, Optional<Integer> limitRows) throws DbToolException {
+        final String columnSelection = columns.isEmpty() ? "*" : String.join(", ", columns);
+
+        StringBuilder query = new StringBuilder();
+        query.append("select ").append(columnSelection).append(" from ").append(table);
+
+        List<String> patternClauses = new ArrayList<>();
+        List<String> compareClauses = new ArrayList<>();
+
+        // Generate where clause
+        if(patterns != null) {
+            for (String col : columns) {
+                for (String pattern : patterns) {
+                    patternClauses.add(col + " LIKE " + "'" + pattern + "'");
+                }
+            }
+        }
+
+        if(compares != null) {
+            for (String compare : compares) {
+                if (compare.matches("^\\s*[!=<>]")) {
+                    for (String col : columns) {
+                        compareClauses.add(col + compare);
+                    }
+                } else {
+                    compareClauses.add(compare);
+                }
+            }
+        }
+
+        if(patternClauses.size() > 0 || compareClauses.size() > 0) {
+            query.append(" where ");
+            String joiner = useAnd ? " AND " : " OR ";
+
+            if(patternClauses.size() > 0) {
+                query.append(String.join(joiner, patternClauses));
+            }
+
+            if(compareClauses.size() > 0) {
+                query.append(String.join(joiner, compareClauses));
+            }
+        }
+
+        // add limit
+        limitRows.ifPresent(integer -> query.append(" LIMIT ").append(integer));
+
+        System.out.println("Executing query: " + query.toString());
+
+        try(Statement stmt = connection.createStatement()) {
+            ResultSet rs = stmt.executeQuery(query.toString());
+            ResultSetMetaData rsmd = rs.getMetaData();
+            int n_cols = rsmd.getColumnCount();
+
+            List<List<String>> results = new ArrayList<>();
+
+            while (rs.next()) {
+                List<String> row = new ArrayList<>();
+                for (int i = 1; i <= n_cols; i++) {
+                    row.add(rs.getString(i));
+                }
+                results.add(row);
+            }
+            return results;
+
+        } catch (SQLException e) {
+            throw new DbToolException("SQL Error occurred: " + e.getMessage());
+        }
     }
 
     private void loadDriverIfNecessary() throws DbToolException {
