@@ -1,5 +1,6 @@
 package de.dbtool.cli.subcommands;
 
+import de.dbtool.console.ConsolePrinter;
 import de.dbtool.files.ProfileHandler;
 import de.dbtool.files.schemas.Profile;
 import de.dbtool.utils.TablePrinter;
@@ -41,7 +42,7 @@ public class ListProfilesCommand implements Runnable {
 
             Profile[] profiles = profileHandler.listProfiles();
             if(profiles == null || profiles.length == 0) {
-                System.out.println("No profiles found!");
+                ConsolePrinter.printInfo("No profiles found!");
                 return;
             }
             List<String[]> tableData = new ArrayList<>(profiles.length);
@@ -50,12 +51,12 @@ public class ListProfilesCommand implements Runnable {
                 tableData.add(new String[] {p.name, p.hostname, Integer.toString(p.port), p.dbName, p.username, tablePrinter.censorPassword(p.password), p.type.toString(), p.driverPath});
             }
 
-            System.out.println("Available profiles:");
+            ConsolePrinter.print("Available profiles:");
             String table = tablePrinter.getTableString("Profiles",tableData);
-            System.out.println(table);
+            ConsolePrinter.print(table);
 
         } catch (Exception ex) {
-            System.err.println("Error while listing profiles: " + ex.getMessage());
+            ConsolePrinter.printError("Error while listing profiles: " + ex.getMessage());
         }
     }
 }

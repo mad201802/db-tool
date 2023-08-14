@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 import de.dbtool.cli.subcommands.options.SupportedDatabases;
+import de.dbtool.console.ConsolePrinter;
 import de.dbtool.exceptions.DbToolException;
 import de.dbtool.files.schemas.Profile;
 
@@ -57,7 +58,7 @@ public class ProfileHandler {
             this.gson.toJson(profile, Profile.class, fileWriter);
             fileWriter.close();
         } catch (Exception e) {
-            System.err.println("Error while creating profile: " + e.getMessage());
+            ConsolePrinter.printError("Error while creating profile: " + e.getMessage());
         }
         return profile;
     }

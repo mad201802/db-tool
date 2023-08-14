@@ -1,6 +1,7 @@
 package de.dbtool.database.interfaces;
 
 import de.dbtool.cli.subcommands.options.SupportedDatabases;
+import de.dbtool.console.ConsolePrinter;
 import de.dbtool.drivers.JDBCDriverLoader;
 import de.dbtool.exceptions.DbToolException;
 import de.dbtool.files.schemas.Profile;
@@ -27,10 +28,10 @@ public class DefaultDatabase implements IDatabase {
         Properties connectionProps = new Properties();
 
         if(profile.type == SupportedDatabases.SQLITE) {
-            System.out.println("Reading database: " + profile.hostname);
+            ConsolePrinter.printInfo("Reading database: " + profile.hostname);
             url = "jdbc:sqlite:" + profile.hostname;
         } else {
-            System.out.println("Connecting to database: " + profile.hostname + ":" + profile.port + "/" + profile.dbName);
+            ConsolePrinter.printInfo("Connecting to database: " + profile.hostname + ":" + profile.port + "/" + profile.dbName);
             connectionProps.put("user", profile.username);
             connectionProps.put("password", profile.password);
 
@@ -39,7 +40,7 @@ public class DefaultDatabase implements IDatabase {
 
         try {
             connection = DriverManager.getConnection(url, connectionProps);
-            System.out.println("Successfully connected to database!");
+            ConsolePrinter.printSuccess("Successfully connected to database!");
         } catch (SQLException e) {
             throw new DbToolException("Error connecting to database: " + e.getMessage());
         }
@@ -145,7 +146,7 @@ public class DefaultDatabase implements IDatabase {
         // add limit
         limitRows.ifPresent(integer -> query.append(" LIMIT ").append(integer));
 
-        System.out.println("Executing query: " + query.toString());
+        ConsolePrinter.printVerbose("Executing query: " + query.toString());
 
         try(Statement stmt = connection.createStatement()) {
             ResultSet rs = stmt.executeQuery(query.toString());
@@ -170,13 +171,13 @@ public class DefaultDatabase implements IDatabase {
 
     private void loadDriverIfNecessary() throws DbToolException {
         if (profile.type == SupportedDatabases.OTHER) {
-            System.out.println("Loading driver: " + profile.driverPath);
+            ConsolePrinter.printInfo("Loading driver: " + profile.driverPath);
             try {
                 Driver driver = JDBCDriverLoader.loadDriver(profile.driverPath);
                 ASCIIArt.handleDriverName(driver.toString());
                 DriverManager.registerDriver(driver);
                 this.databaseType = driver.toString().split("\\.")[1];
-                System.out.println("Driver for " + this.databaseType.toUpperCase() + " loaded");
+                ConsolePrinter.printSuccess("Driver for " + this.databaseType.toUpperCase() + " loaded");
                 return;
             } catch (SQLException e) {
                 throw new DbToolException("Error loading driver: " + e.getMessage());

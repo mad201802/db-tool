@@ -19,8 +19,8 @@ public class DatabaseTests {
         System.setErr(new PrintStream(baos));
 
         try (ApplicationContext ctx = ApplicationContext.run(Environment.CLI, Environment.TEST)) {
-//            String[] cli_args = new String[]{"grep", "-p", "mysql", "-tp", "f*"};
-            String[] cli_args = new String[]{"grep", "-p", "eventmate_db", "-tr", "(User)|(Event)", "-cp", "*", "-vp", "t*"};
+            String[] cli_args = new String[]{"grep", "-p", "mysql", "-tp", "f*", "-lc", "10", "-lr", "10", "--please-tell-me-everything"};
+//            String[] cli_args = new String[]{"grep", "-p", "eventmate_db", "-tr", "(User)|(Event)", "-cp", "*", "-vp", "t*"};
 
             PicocliRunner.run(DbToolCommand.class, ctx, cli_args);
 

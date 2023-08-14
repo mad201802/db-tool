@@ -1,7 +1,6 @@
 package de.dbtool.cli.subcommands;
 
-import de.dbtool.database.Query;
-import de.dbtool.database.QueryProcessor;
+import de.dbtool.console.ConsolePrinter;
 import de.dbtool.database.factories.DatabaseFactory;
 import de.dbtool.database.interfaces.DefaultDatabase;
 import de.dbtool.database.interfaces.IDatabase;
@@ -14,9 +13,7 @@ import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import picocli.CommandLine;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -53,7 +50,7 @@ public class ListTablesCommand implements Runnable {
 
             if (profile == null) throw new DbToolException("Profile not found");
 
-            System.out.println("Using profile: " + profile.name);
+            ConsolePrinter.printSuccess("Using profile: " + profile.name);
 
             IDatabase database = DatabaseFactory.getDatabaseType(profile);
 
@@ -62,7 +59,7 @@ public class ListTablesCommand implements Runnable {
             List<String> tables = defaultDatabase.getAllDatabaseTables();
 
             String tableString = tablePrinter.getTableString("Tables found: " + tables.size(), tables.stream().map(x -> new String[]{x}).toList());
-            System.out.println(tableString);
+            ConsolePrinter.print(tableString);
 
         } catch (Exception ex) {
             System.err.println("Error while listing tables: " + ex.getMessage());

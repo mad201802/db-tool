@@ -1,6 +1,7 @@
 package de.dbtool.cli.subcommands;
 
 import de.dbtool.cli.subcommands.containers.*;
+import de.dbtool.console.ConsolePrinter;
 import de.dbtool.database.Query;
 import de.dbtool.database.QueryProcessor;
 import de.dbtool.database.factories.DatabaseFactory;
@@ -67,7 +68,7 @@ public class GrepCommand implements Runnable {
 
     @Override
     public void run() {
-
+        ConsolePrinter.VERBOSE = verbose;
         // Validate the command line options
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
         Set<ConstraintViolation<GrepCommand>> violations = validator.validate(this);
@@ -88,25 +89,24 @@ public class GrepCommand implements Runnable {
 
             if (profile == null) throw new DbToolException("Profile not found");
 
-            System.out.println("Using profile: " + profile.name);
+            ConsolePrinter.printInfo("Using profile: " + profile.name);
 
-            System.out.println("Limit rows: " + limitRows);
             Query query = new Query(tablePatternOptions, tableRegexOptions, columnPatternOptions, columnRegexOptions, valuePatternOptions, valueCompareOptions, valueCompareUseAnd, limitRows);
             IDatabase database = DatabaseFactory.getDatabaseType(profile);
             QueryProcessor queryProcessor = new QueryProcessor(database, query);
 
             Map<String, List<String[]>> result = queryProcessor.executeQuery();
             if(result.isEmpty()) {
-                System.out.println("No results found in database");
+                ConsolePrinter.printInfo("No results found in database");
                 return;
             }
 
             for(Map.Entry<String, List<String[]>> entry : result.entrySet()) {
-                System.out.println(tablePrinter.getTableString("Table " + entry.getKey() + ": " + (entry.getValue().size()-1) + " Row(s) found", entry.getValue()));
+                ConsolePrinter.print(tablePrinter.getTableString("Table " + entry.getKey() + ": " + (entry.getValue().size() - 1) + " Row(s) found", entry.getValue()));
             }
 
         } catch (DbToolException ex) {
-            System.err.println("Error: " + ex.getMessage());
+            ConsolePrinter.printError(ex.getMessage());
         }
     }
 }
