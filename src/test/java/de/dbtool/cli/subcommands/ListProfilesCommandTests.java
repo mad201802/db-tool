@@ -59,7 +59,7 @@ public class ListProfilesCommandTests {
         }
 
         CreateProfileCommandTests.print(out_text.toString(), err_text.toString());
-        File f = new File(System.getProperty("user.dir") + "/src/test/resources/chinook.db");
+        File f = new File("demo.json");
         CreateProfileCommandTests.print(f.exists() + "", f.getAbsolutePath());
         Assertions.assertTrue(out_text.toString().contains("demo"));
         Assertions.assertTrue(out_text.toString().contains("SQLITE"));
