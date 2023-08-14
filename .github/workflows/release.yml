@@ -18,6 +18,7 @@ jobs:
           cache: 'gradle'
       - run: chmod +x ./gradlew
       - run: ./gradlew build --no-daemon
+      - run: ls -la
       - name: Archive package artifacts
         uses: actions/upload-artifact@v3
         with:
