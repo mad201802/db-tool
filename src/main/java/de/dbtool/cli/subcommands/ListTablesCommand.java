@@ -8,13 +8,9 @@ import de.dbtool.exceptions.DbToolException;
 import de.dbtool.files.ProfileHandler;
 import de.dbtool.files.schemas.Profile;
 import de.dbtool.utils.TablePrinter;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validation;
-import jakarta.validation.Validator;
 import picocli.CommandLine;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * Subcommand to list all available profiles
@@ -31,18 +27,6 @@ public class ListTablesCommand implements Runnable {
 
     @Override
     public void run() {
-        Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
-        Set<ConstraintViolation<ListTablesCommand>> violations = validator.validate(this);
-
-        if(!violations.isEmpty()) {
-            StringBuilder errorMsg = new StringBuilder();
-            for(ConstraintViolation<ListTablesCommand> violation : violations) {
-                errorMsg.append("ERROR: ").append(violation.getMessage()).append("\n");
-            }
-            ConsolePrinter.printError(errorMsg.toString());
-            return;
-        }
-
         try{
             ProfileHandler profileHandler = new ProfileHandler();
             Profile profile = profileHandler.getProfile(profileName);

@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Utility class for file handling.
@@ -19,7 +20,7 @@ import java.io.IOException;
  */
 public class ProfileHandler {
 
-    private static String PROFILE_PATH = System.getProperty("user.home") + File.separator + ".dbtool" + File.separator + "profiles";
+    public static String PROFILE_PATH = System.getProperty("user.home") + File.separator + ".dbtool" + File.separator + "profiles";
     public Gson gson;
 
     public ProfileHandler() {
@@ -85,21 +86,29 @@ public class ProfileHandler {
      * @return
      * Returns an array of profiles.
      */
-    public Profile[] listProfiles() {
+    public ArrayList<Profile> listProfiles() {
         try {
             File folder = new File(PROFILE_PATH);
             File[] files = folder.listFiles();
-            if (files == null) return new Profile[0];
+            if (files == null) return new ArrayList<>();
 
-            Profile[] profiles = new Profile[files.length];
+            ArrayList<Profile> profiles = new ArrayList<>();
             for (int i = 0; i < files.length; i++) {
-                FileReader fileReader = new FileReader(files[i].getPath());
-                profiles[i] = gson.fromJson(fileReader, Profile.class);
-                fileReader.close();
+                String extension = "";
+                int feI = files[i].getName().lastIndexOf('.');
+                if (i > 0) {
+                    extension = files[i].getName().substring(feI+1);
+                }
+                if(extension.equalsIgnoreCase("json")) {
+                    System.out.println(files[i].getName());
+                    FileReader fileReader = new FileReader(files[i].getPath());
+                    profiles.add(gson.fromJson(fileReader, Profile.class));
+                    fileReader.close();
+                }
             }
             return profiles;
         } catch (Exception e) {
-            ConsolePrinter.printError("Error while listing profile files: " + e.getMessage());
+            ConsolePrinter.printError("Error while reading profiles directory: " + e.getMessage());
         }
         return null;
     }
