@@ -26,7 +26,7 @@ public class ListTablesCommand implements Runnable {
     @CommandLine.Option(names = {"-p", "--profile"}, description = "The name of the profile", required = true)
     private String profileName;
 
-    @CommandLine.Option(names = {"-lt", "--limit-text-length"}, description = "Limits the length of text in a column and display ellipsis", required = false)
+    @CommandLine.Option(names = {"-lt", "--limit-text-length"}, description = "Limits the length of text in a column and display ellipsis")
     private int limitTextLength = -1;
 
     @Override
@@ -39,7 +39,7 @@ public class ListTablesCommand implements Runnable {
             for(ConstraintViolation<ListTablesCommand> violation : violations) {
                 errorMsg.append("ERROR: ").append(violation.getMessage()).append("\n");
             }
-            System.err.println(errorMsg);
+            ConsolePrinter.printError(errorMsg.toString());
             return;
         }
 
@@ -62,7 +62,7 @@ public class ListTablesCommand implements Runnable {
             ConsolePrinter.print(tableString);
 
         } catch (Exception ex) {
-            System.err.println("Error while listing tables: " + ex.getMessage());
+            ConsolePrinter.printError("Error while listing tables: " + ex.getMessage());
         }
     }
 }

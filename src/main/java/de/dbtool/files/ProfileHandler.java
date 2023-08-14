@@ -70,15 +70,14 @@ public class ProfileHandler {
      * @return
      * Returns true if the profile was deleted successfully.
      */
-    public Boolean deleteProfile(String name) {
+    public boolean deleteProfile(String name) {
         try {
             File file = new File(PROFILE_PATH + File.separator + name + ".json");
-            file.delete();
+            return file.delete();
         } catch (Exception e) {
-            System.err.println("Error while deleting profile: " + e.getMessage());
+            ConsolePrinter.printError("Error while deleting profile: " + e.getMessage());
             return false;
         }
-        return true;
     }
 
     /**
@@ -100,7 +99,7 @@ public class ProfileHandler {
             }
             return profiles;
         } catch (Exception e) {
-            System.err.println("Error while listing profile files: " + e.getMessage());
+            ConsolePrinter.printError("Error while listing profile files: " + e.getMessage());
         }
         return null;
     }
@@ -112,9 +111,9 @@ public class ProfileHandler {
      * @return Returns the profile.
      */
     public Profile getProfile(String name) throws DbToolException {
-        Profile profile = null;
+        Profile profile;
         try {
-            File file = new File(PROFILE_PATH + File.separator + name + ".json");;
+            File file = new File(PROFILE_PATH + File.separator + name + ".json");
             FileReader fileReader = new FileReader(file.getPath());
             profile = gson.fromJson(fileReader, Profile.class);
             fileReader.close();
