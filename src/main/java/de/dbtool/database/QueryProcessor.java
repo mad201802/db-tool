@@ -1,6 +1,7 @@
 package de.dbtool.database;
 
 import de.dbtool.cli.subcommands.containers.*;
+import de.dbtool.console.ConsolePrinter;
 import de.dbtool.database.interfaces.IDatabase;
 import de.dbtool.exceptions.DbToolException;
 import de.dbtool.utils.SearchUtils;
@@ -9,7 +10,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class QueryProcessor {
-    private Query query;
+    private final Query query;
 
     private final IDatabase db;
 
@@ -81,24 +82,27 @@ public class QueryProcessor {
         for (String t : tables) {
             if(columns.get(t).size() == 0) continue;
 
-            List<List<String>> values = db.getValues(
-                    t, columns.get(t),
-                    query.getValuePatterns() != null ? query.getValuePatterns().stream().map(v -> v.getOption().replace("*", "%")).collect(Collectors.toList()) : new ArrayList<>(),
-                    query.getValueCompares() != null ? query.getValueCompares().stream().map(ValueCompareOption::getOption).collect(Collectors.toList()) : new ArrayList<>(),
-                    query.isValueCompareUseAnd(),
-                    query.getLimitRows() > 0 ? Optional.of(query.getLimitRows()) : Optional.empty()
-            );
-            if(values.size() == 0) continue;
+            try {
+                List<List<String>> values = db.getValues(
+                        t, columns.get(t),
+                        query.getValuePatterns() != null ? query.getValuePatterns().stream().map(v -> v.getOption().replace("*", "%")).collect(Collectors.toList()) : new ArrayList<>(),
+                        query.getValueCompares() != null ? query.getValueCompares().stream().map(ValueCompareOption::getOption).collect(Collectors.toList()) : new ArrayList<>(),
+                        query.isValueCompareUseAnd(),
+                        query.getLimitRows() > 0 ? Optional.of(query.getLimitRows()) : Optional.empty()
+                );
+                if(values.size() == 0) continue;
 
-            List<String[]> tableData = new ArrayList<>();
-            tableData.add(columns.get(t).toArray(new String[0]));
-            for(List<String> row : values) {
-                tableData.add(row.toArray(new String[0]));
+                List<String[]> tableData = new ArrayList<>();
+                tableData.add(columns.get(t).toArray(new String[0]));
+                for(List<String> row : values) {
+                    tableData.add(row.toArray(new String[0]));
+                }
+
+                result.put(t, tableData);
+
+            } catch (DbToolException e) {
+                ConsolePrinter.printVerbose("Skipping table '" + t + "': " + e.getMessage());
             }
-
-            // TODO: Implement --no-trunctate option (add second case where Optional.empty() has been replaced
-            //  with Optional.of(0) or something like that because 0 means no truncation)
-            result.put(t, tableData);
         }
 
         return result;
