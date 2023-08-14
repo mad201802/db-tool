@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.PrintStream;
 
 public class ListProfilesCommandTests {
@@ -58,6 +59,8 @@ public class ListProfilesCommandTests {
         }
 
         CreateProfileCommandTests.print(out_text.toString(), err_text.toString());
+        File f = new File(System.getProperty("user.dir") + "/src/test/resources/chinook.db");
+        CreateProfileCommandTests.print(f.exists() + "", null);
         Assertions.assertTrue(out_text.toString().contains("demo"));
         Assertions.assertTrue(out_text.toString().contains("SQLITE"));
         UnitTestUtils.deleteDemoProfile();
