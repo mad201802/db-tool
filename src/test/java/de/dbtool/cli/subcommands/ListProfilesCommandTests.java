@@ -58,9 +58,6 @@ public class ListProfilesCommandTests {
             PicocliRunner.run(DbToolCommand.class, ctx, args);
         }
 
-        CreateProfileCommandTests.print(out_text.toString(), err_text.toString());
-        File f = new File("demo.json");
-        CreateProfileCommandTests.print(f.exists() + "", f.getAbsolutePath());
         Assertions.assertTrue(out_text.toString().contains("demo"));
         Assertions.assertTrue(out_text.toString().contains("SQLITE"));
         UnitTestUtils.deleteDemoProfile();

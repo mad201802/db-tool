@@ -93,15 +93,15 @@ public class ProfileHandler {
             if (files == null) return new ArrayList<>();
 
             ArrayList<Profile> profiles = new ArrayList<>();
-            for (int i = 0; i < files.length; i++) {
+            for (File file : files) {
                 String extension = "";
-                int feI = files[i].getName().lastIndexOf('.');
-                if (i > 0) {
-                    extension = files[i].getName().substring(feI+1);
+                int feI = file.getName().lastIndexOf('.');
+                if (feI > 0) {
+                    extension = file.getName().substring(feI+1);
                 }
                 if(extension.equalsIgnoreCase("json")) {
-                    System.out.println(files[i].getName());
-                    FileReader fileReader = new FileReader(files[i].getPath());
+                    System.out.println(file.getName());
+                    FileReader fileReader = new FileReader(file.getPath());
                     profiles.add(gson.fromJson(fileReader, Profile.class));
                     fileReader.close();
                 }
