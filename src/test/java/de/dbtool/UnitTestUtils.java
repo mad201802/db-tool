@@ -7,7 +7,8 @@ public class UnitTestUtils {
     public static void createDemoProfile() {
         ProfileHandler handler = new ProfileHandler();
         ProfileHandler.setProfilePath("./");
-        String path = System.getProperty("user.dir") + "\\src\\test\\resources\\chinook.db";
+        String path = System.getProperty("user.dir") + "/src/test/resources/chinook.db";
+        System.out.println(path);
         handler.createProfile("demo", path, 0, "", "", "", SupportedDatabases.SQLITE, "");
     }
 
