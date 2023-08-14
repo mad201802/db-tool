@@ -67,6 +67,7 @@ public class ListTablesCommandTests {
             PicocliRunner.run(DbToolCommand.class, ctx, args);
         }
 
+        CreateProfileCommandTests.print(out_text.toString(), err_text.toString());
         Assertions.assertTrue(out_text.toString().contains("Successfully connected to database"));
         Assertions.assertTrue(out_text.toString().contains("Tables found: 11"));
     }
