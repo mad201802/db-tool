@@ -19,3 +19,4 @@ jobs:
       - run: chmod +x ./gradlew
       - run: ls -la
       - run: ./gradlew test
+      - run: ls -la
