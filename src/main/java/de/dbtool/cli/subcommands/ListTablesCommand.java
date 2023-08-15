@@ -8,13 +8,9 @@ import de.dbtool.exceptions.DbToolException;
 import de.dbtool.files.ProfileHandler;
 import de.dbtool.files.schemas.Profile;
 import de.dbtool.utils.TablePrinter;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validation;
-import jakarta.validation.Validator;
 import picocli.CommandLine;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * Subcommand to list all available profiles
@@ -26,23 +22,11 @@ public class ListTablesCommand implements Runnable {
     @CommandLine.Option(names = {"-p", "--profile"}, description = "The name of the profile", required = true)
     private String profileName;
 
-    @CommandLine.Option(names = {"-lt", "--limit-text-length"}, description = "Limits the length of text in a column and display ellipsis", required = false)
+    @CommandLine.Option(names = {"-lt", "--limit-text-length"}, description = "Limits the length of text in a column and display ellipsis")
     private int limitTextLength = -1;
 
     @Override
     public void run() {
-        Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
-        Set<ConstraintViolation<ListTablesCommand>> violations = validator.validate(this);
-
-        if(!violations.isEmpty()) {
-            StringBuilder errorMsg = new StringBuilder();
-            for(ConstraintViolation<ListTablesCommand> violation : violations) {
-                errorMsg.append("ERROR: ").append(violation.getMessage()).append("\n");
-            }
-            System.err.println(errorMsg);
-            return;
-        }
-
         try{
             ProfileHandler profileHandler = new ProfileHandler();
             Profile profile = profileHandler.getProfile(profileName);
@@ -62,7 +46,7 @@ public class ListTablesCommand implements Runnable {
             ConsolePrinter.print(tableString);
 
         } catch (Exception ex) {
-            System.err.println("Error while listing tables: " + ex.getMessage());
+            ConsolePrinter.printError("Error while listing tables: " + ex.getMessage());
         }
     }
 }

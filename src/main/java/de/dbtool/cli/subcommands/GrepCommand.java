@@ -101,6 +101,7 @@ public class GrepCommand implements Runnable {
                 return;
             }
 
+            ConsolePrinter.printSuccess("Found " + result.size() + " Table(s)");
             for(Map.Entry<String, List<String[]>> entry : result.entrySet()) {
                 ConsolePrinter.print(tablePrinter.getTableString("Table " + entry.getKey() + ": " + (entry.getValue().size() - 1) + " Row(s) found", entry.getValue()));
             }

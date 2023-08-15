@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Utility class for file handling.
@@ -19,7 +20,7 @@ import java.io.IOException;
  */
 public class ProfileHandler {
 
-    private static String PROFILE_PATH = System.getProperty("user.home") + File.separator + ".dbtool" + File.separator + "profiles";
+    public static String PROFILE_PATH = System.getProperty("user.home") + File.separator + ".dbtool" + File.separator + "profiles";
     public Gson gson;
 
     public ProfileHandler() {
@@ -70,15 +71,14 @@ public class ProfileHandler {
      * @return
      * Returns true if the profile was deleted successfully.
      */
-    public Boolean deleteProfile(String name) {
+    public boolean deleteProfile(String name) {
         try {
             File file = new File(PROFILE_PATH + File.separator + name + ".json");
-            file.delete();
+            return file.delete();
         } catch (Exception e) {
-            System.err.println("Error while deleting profile: " + e.getMessage());
+            ConsolePrinter.printError("Error while deleting profile: " + e.getMessage());
             return false;
         }
-        return true;
     }
 
     /**
@@ -86,21 +86,29 @@ public class ProfileHandler {
      * @return
      * Returns an array of profiles.
      */
-    public Profile[] listProfiles() {
+    public ArrayList<Profile> listProfiles() {
         try {
             File folder = new File(PROFILE_PATH);
             File[] files = folder.listFiles();
-            if (files == null) return new Profile[0];
+            if (files == null) return new ArrayList<>();
 
-            Profile[] profiles = new Profile[files.length];
-            for (int i = 0; i < files.length; i++) {
-                FileReader fileReader = new FileReader(files[i].getPath());
-                profiles[i] = gson.fromJson(fileReader, Profile.class);
-                fileReader.close();
+            ArrayList<Profile> profiles = new ArrayList<>();
+            for (File file : files) {
+                String extension = "";
+                int feI = file.getName().lastIndexOf('.');
+                if (feI > 0) {
+                    extension = file.getName().substring(feI+1);
+                }
+                if(extension.equalsIgnoreCase("json")) {
+                    System.out.println(file.getName());
+                    FileReader fileReader = new FileReader(file.getPath());
+                    profiles.add(gson.fromJson(fileReader, Profile.class));
+                    fileReader.close();
+                }
             }
             return profiles;
         } catch (Exception e) {
-            System.err.println("Error while listing profile files: " + e.getMessage());
+            ConsolePrinter.printError("Error while reading profiles directory: " + e.getMessage());
         }
         return null;
     }
@@ -112,9 +120,9 @@ public class ProfileHandler {
      * @return Returns the profile.
      */
     public Profile getProfile(String name) throws DbToolException {
-        Profile profile = null;
+        Profile profile;
         try {
-            File file = new File(PROFILE_PATH + File.separator + name + ".json");;
+            File file = new File(PROFILE_PATH + File.separator + name + ".json");
             FileReader fileReader = new FileReader(file.getPath());
             profile = gson.fromJson(fileReader, Profile.class);
             fileReader.close();
