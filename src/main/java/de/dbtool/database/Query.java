@@ -4,6 +4,10 @@ import de.dbtool.cli.subcommands.containers.*;
 
 import java.util.List;
 
+/**
+ * This class represents a grep query to the database
+ * It contains all the options that dictate what to search for
+ */
 public class Query {
     private final List<TablePatternOption> tablePatterns;
     private final List<TableRegexOption> tableRegex;
@@ -11,9 +15,20 @@ public class Query {
     private final List<ColumnRegexOption> columnRegex;
     private final List<ValuePatternOption> valuePatterns;
     private final List<ValueCompareOption> valueCompares;
-    private boolean valueCompareUseAnd;
+    private final boolean valueCompareUseAnd;
     private final int limitRows;
 
+    /**
+     * Constructor for the Query class
+     * @param tablePatterns The table patterns to search for
+     * @param tableRegexOptions The table regex options to search for
+     * @param columnPatternOptions The column patterns to search for
+     * @param columnRegexOptions The column regex options to search for
+     * @param valuePatternOptions The value patterns to search for
+     * @param valueCompareOptions The value compare options to search for
+     * @param valueCompareUseAnd Whether to use AND or OR when combining the value compare options
+     * @param limitRows The maximum number of rows to return
+     */
     public Query(List<TablePatternOption> tablePatterns, List<TableRegexOption> tableRegexOptions,
                  List<ColumnPatternOption> columnPatternOptions, List<ColumnRegexOption> columnRegexOptions,
                  List<ValuePatternOption> valuePatternOptions, List<ValueCompareOption> valueCompareOptions,

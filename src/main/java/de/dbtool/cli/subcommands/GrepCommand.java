@@ -21,7 +21,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Subcommand to search for patterns/regex in a database
+ * Subcommand to search for patterns/regex/value compare in a database
  */
 @CommandLine.Command(name = "grep", description = "Grep-like tool for searching a database", mixinStandardHelpOptions = true)
 public class GrepCommand implements Runnable {

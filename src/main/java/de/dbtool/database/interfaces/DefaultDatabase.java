@@ -10,11 +10,18 @@ import de.dbtool.utils.ASCIIArt;
 import java.sql.*;
 import java.util.*;
 
+/**
+ * Default implementation of the IDatabase interface
+ * This class uses JDBC to connect to the database
+ * It provides all necessary methods to query information from the database
+ */
 public class DefaultDatabase implements IDatabase {
 
+    /** The profile to connect to */
     private final Profile profile;
     private String databaseType;
 
+    /** The jdbc connection to the database */
     private Connection connection;
 
     public DefaultDatabase(Profile profile) throws DbToolException {
@@ -50,6 +57,7 @@ public class DefaultDatabase implements IDatabase {
     public List<String> getAllDatabaseTables() throws DbToolException {
         return this.getDatabaseTables("%");
     }
+
 
     @Override
     public List<String> getDatabaseTables(String pattern) throws DbToolException {
@@ -169,6 +177,10 @@ public class DefaultDatabase implements IDatabase {
         }
     }
 
+    /**
+     * Check if the database profile uses a custom driver and load it if necessary
+     * @throws DbToolException If an error occurs while loading the driver
+     */
     private void loadDriverIfNecessary() throws DbToolException {
         if (profile.type == SupportedDatabases.OTHER) {
             ConsolePrinter.printInfo("Loading driver: " + profile.driverPath);
@@ -177,7 +189,7 @@ public class DefaultDatabase implements IDatabase {
                 ASCIIArt.handleDriverName(driver.toString());
                 DriverManager.registerDriver(driver);
                 this.databaseType = driver.toString().split("\\.")[1];
-                ConsolePrinter.printSuccess("Driver for " + this.databaseType.toUpperCase() + " loaded");
+                System.out.println("Driver for " + this.databaseType.toUpperCase() + " loaded");
                 return;
             } catch (SQLException e) {
                 throw new DbToolException("Error loading driver: " + e.getMessage());
