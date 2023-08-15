@@ -3,7 +3,7 @@ package de.dbtool.cli.subcommands.containers;
 import picocli.CommandLine;
 
 /**
- * Class to handle the column pattern option
+ * Class to handle the column regex option
  */
 public class ColumnRegexOption implements IBaseOption {
     @CommandLine.Option(names = {"-cr", "--column-regex"}, description = "Define regex pattern for column names")

@@ -9,11 +9,18 @@ import de.dbtool.utils.ASCIIArt;
 import java.sql.*;
 import java.util.*;
 
+/**
+ * Default implementation of the IDatabase interface
+ * This class uses JDBC to connect to the database
+ * It provides all necessary methods to query information from the database
+ */
 public class DefaultDatabase implements IDatabase {
 
+    /** The profile to connect to */
     private final Profile profile;
     private String databaseType;
 
+    /** The jdbc connection to the database */
     private Connection connection;
 
     public DefaultDatabase(Profile profile) throws DbToolException {
@@ -41,6 +48,7 @@ public class DefaultDatabase implements IDatabase {
     public List<String> getAllDatabaseTables() throws DbToolException {
         return this.getDatabaseTables("%");
     }
+
 
     @Override
     public List<String> getDatabaseTables(String pattern) throws DbToolException {
@@ -91,7 +99,7 @@ public class DefaultDatabase implements IDatabase {
     }
 
     @Override
-    public List<List<String>> getValues(String table, Set<String> columns, List<String> patterns, List<String> compares, boolean useAnd, Optional<Integer> limitRows) throws DbToolException {
+    public List<List<String>> getValues(String table, Set<String> columns, List<String> patterns, List<String> compares, boolean useAnd, Integer limit) throws DbToolException {
         final String columnSelection = columns.isEmpty() ? "*" : String.join(", ", columns);
 
         StringBuilder query = new StringBuilder();
@@ -135,9 +143,9 @@ public class DefaultDatabase implements IDatabase {
         }
 
         // add limit
-        limitRows.ifPresent(integer -> query.append(" LIMIT ").append(integer));
+        if (limit != null) query.append(" LIMIT ").append(limit);
 
-        System.out.println("Executing query: " + query.toString());
+        System.out.println("Executing query: " + query);
 
         try(Statement stmt = connection.createStatement()) {
             ResultSet rs = stmt.executeQuery(query.toString());
@@ -160,6 +168,10 @@ public class DefaultDatabase implements IDatabase {
         }
     }
 
+    /**
+     * Check if the database profile uses a custom driver and load it if necessary
+     * @throws DbToolException If an error occurs while loading the driver
+     */
     private void loadDriverIfNecessary() throws DbToolException {
         if (profile.type == SupportedDatabases.OTHER) {
             System.out.println("Loading driver: " + profile.driverPath);
