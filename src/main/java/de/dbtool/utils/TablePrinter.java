@@ -38,11 +38,11 @@ public class TablePrinter {
             int finalI = i;
 
             Column column = new Column();
-            if (this.defaultLimitTextLength > 0) column.maxWidth(this.defaultLimitTextLength, OverflowBehaviour.ELLIPSIS_RIGHT);
+            if (this.defaultLimitTextLength > 0) column.maxWidth(this.defaultLimitTextLength, OverflowBehaviour.CLIP_RIGHT);
             column.dataAlign(HorizontalAlign.CENTER);
             columnData.add(column.with(c -> c[finalI]));
         }
-        Character[] borderStyles = AsciiTable.FANCY_ASCII;
+        Character[] borderStyles = AsciiTable.BASIC_ASCII;
         table += AsciiTable.getTable(borderStyles, data, columnData);
 
         return table;
