@@ -1,6 +1,7 @@
 package de.dbtool.cli.subcommands;
 
 import de.dbtool.cli.subcommands.options.SupportedDatabases;
+import de.dbtool.console.ConsolePrinter;
 import de.dbtool.exceptions.DbToolException;
 import de.dbtool.files.ProfileHandler;
 import de.dbtool.files.schemas.Profile;
@@ -54,7 +55,7 @@ public class CreateProfileCommand implements Runnable {
     public void run() {
         // Check if the user specified a custom driver path, but did not specify the type OTHER
         if (type == SupportedDatabases.OTHER && driverPath == null) {
-            System.err.println("If you want to use a database type other than the supported ones, you have to specify the path to the jdbc driver");
+            ConsolePrinter.printError("If you want to use a database type other than the supported ones, you have to specify the path to the jdbc driver");
             return;
         }
 
@@ -67,7 +68,7 @@ public class CreateProfileCommand implements Runnable {
             for (ConstraintViolation<CreateProfileCommand> violation : violations) {
                 errorMsg.append("ERROR: ").append(violation.getMessage()).append("\n");
             }
-            System.err.println(errorMsg);
+            ConsolePrinter.printError(errorMsg.toString());
             return;
         }
 
@@ -82,13 +83,13 @@ public class CreateProfileCommand implements Runnable {
 
             Profile newProfile = profileHandler.createProfile(name, hostname, port, dbName, username, password, type, driverPath);
             if (newProfile != null) {
-                System.out.println("Profile " + name + " created successfully");
+                ConsolePrinter.printSuccess("Profile " + name + " created successfully");
             } else {
                 throw new DbToolException("Error while creating profile");
             }
 
         } catch (DbToolException ex) {
-            System.err.println("Error while creating profile: " + ex.getMessage());
+            ConsolePrinter.printError("Error while creating profile: " + ex.getMessage());
         }
     }
 }

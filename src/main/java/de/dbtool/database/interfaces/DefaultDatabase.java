@@ -1,6 +1,7 @@
 package de.dbtool.database.interfaces;
 
 import de.dbtool.cli.subcommands.options.SupportedDatabases;
+import de.dbtool.console.ConsolePrinter;
 import de.dbtool.drivers.JDBCDriverLoader;
 import de.dbtool.exceptions.DbToolException;
 import de.dbtool.files.schemas.Profile;
@@ -9,11 +10,18 @@ import de.dbtool.utils.ASCIIArt;
 import java.sql.*;
 import java.util.*;
 
+/**
+ * Default implementation of the IDatabase interface
+ * This class uses JDBC to connect to the database
+ * It provides all necessary methods to query information from the database
+ */
 public class DefaultDatabase implements IDatabase {
 
+    /** The profile to connect to */
     private final Profile profile;
     private String databaseType;
 
+    /** The jdbc connection to the database */
     private Connection connection;
 
     public DefaultDatabase(Profile profile) throws DbToolException {
@@ -23,15 +31,23 @@ public class DefaultDatabase implements IDatabase {
 
     @Override
     public void connect() throws DbToolException {
-        System.out.println("Connecting to database: " + profile.hostname + ":" + profile.port + "/" + profile.dbName);
+        String url;
         Properties connectionProps = new Properties();
-        connectionProps.put("user", profile.username);
-        connectionProps.put("password", profile.password);
 
-        String url = "jdbc:" + this.databaseType + "://" + profile.hostname + ":" + profile.port + "/" + profile.dbName;
+        if(profile.type == SupportedDatabases.SQLITE) {
+            ConsolePrinter.printInfo("Reading database: " + profile.hostname);
+            url = "jdbc:sqlite:" + profile.hostname;
+        } else {
+            ConsolePrinter.printInfo("Connecting to database: " + profile.hostname + ":" + profile.port + "/" + profile.dbName);
+            connectionProps.put("user", profile.username);
+            connectionProps.put("password", profile.password);
+
+            url = "jdbc:" + this.databaseType + "://" + profile.hostname + ":" + profile.port + "/" + profile.dbName;
+        }
+
         try {
             connection = DriverManager.getConnection(url, connectionProps);
-            System.out.println("Successfully connected to database!");
+            ConsolePrinter.printSuccess("Successfully connected to database!");
         } catch (SQLException e) {
             throw new DbToolException("Error connecting to database: " + e.getMessage());
         }
@@ -41,6 +57,7 @@ public class DefaultDatabase implements IDatabase {
     public List<String> getAllDatabaseTables() throws DbToolException {
         return this.getDatabaseTables("%");
     }
+
 
     @Override
     public List<String> getDatabaseTables(String pattern) throws DbToolException {
@@ -137,7 +154,7 @@ public class DefaultDatabase implements IDatabase {
         // add limit
         limitRows.ifPresent(integer -> query.append(" LIMIT ").append(integer));
 
-        System.out.println("Executing query: " + query.toString());
+        ConsolePrinter.printVerbose("Executing query: " + query);
 
         try(Statement stmt = connection.createStatement()) {
             ResultSet rs = stmt.executeQuery(query.toString());
@@ -160,9 +177,13 @@ public class DefaultDatabase implements IDatabase {
         }
     }
 
+    /**
+     * Check if the database profile uses a custom driver and load it if necessary
+     * @throws DbToolException If an error occurs while loading the driver
+     */
     private void loadDriverIfNecessary() throws DbToolException {
         if (profile.type == SupportedDatabases.OTHER) {
-            System.out.println("Loading driver: " + profile.driverPath);
+            ConsolePrinter.printInfo("Loading driver: " + profile.driverPath);
             try {
                 Driver driver = JDBCDriverLoader.loadDriver(profile.driverPath);
                 ASCIIArt.handleDriverName(driver.toString());

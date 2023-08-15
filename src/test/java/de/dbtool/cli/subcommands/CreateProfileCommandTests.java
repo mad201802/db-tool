@@ -20,7 +20,7 @@ public class CreateProfileCommandTests {
 
     @AfterAll
     public static void cleanup() {
-        System.out.println(FileSystem.deleteDirectory(new File(TMP_FOLDER)));
+        FileSystem.deleteDirectory(new File(TMP_FOLDER));
     }
 
     public static void print(String out, String err) {
@@ -112,7 +112,7 @@ public class CreateProfileCommandTests {
     }
 
     @Test
-    public void test_create_profile_duplicate() throws InterruptedException {
+    public void test_create_profile_duplicate() {
         String tmp = TMP_FOLDER + "/test_create_profile_duplicate";
         ProfileHandler.setProfilePath(tmp);
 

@@ -6,7 +6,7 @@ import io.micronaut.configuration.picocli.PicocliRunner;
 
 
 public class Main {
-    public static String TOOL_VERSION = "0.0.1";
+    public static final String TOOL_VERSION = "0.1.0";
 
     public static void main(String[] args) {
         ASCIIArt.printLogo();
