@@ -4,14 +4,14 @@ import de.dbtool.cli.subcommands.options.SupportedDatabases;
 
 public class Profile {
 
-    public String name;
-    public String hostname;
-    public int port;
-    public String dbName;
-    public String username;
-    public String password;
-    public SupportedDatabases type;
-    public String driverPath;
+    public final String name;
+    public final String hostname;
+    public final int port;
+    public final String dbName;
+    public final String username;
+    public final String password;
+    public final SupportedDatabases type;
+    public final String driverPath;
 
     public Profile(String name, String hostname, int port, String dbName, String username, String password, SupportedDatabases type, String driverPath) {
         this.name = name;

@@ -26,8 +26,7 @@ public class JDBCDriverLoader {
             throw new DbToolException("Driver not found: " + driverPath);
         }
         try {
-            URL[] urls = new URL[0];
-            urls = new URL[]{driverFile.toURI().toURL()};
+            URL[] urls = new URL[]{driverFile.toURI().toURL()};
 
             URLClassLoader classLoader = new URLClassLoader(urls);
             ServiceLoader<Driver> serviceLoader = ServiceLoader.load(Driver.class, classLoader);

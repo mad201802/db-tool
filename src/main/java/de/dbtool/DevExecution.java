@@ -6,12 +6,14 @@ import io.micronaut.configuration.picocli.PicocliRunner;
 import io.micronaut.context.ApplicationContext;
 import io.micronaut.context.env.Environment;
 
-import java.io.*;
-import java.sql.SQLException;
+import java.io.ByteArrayOutputStream;
+import java.io.FileDescriptor;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
 
 @ExcludeCoverage
 public class DevExecution {
-    public static void main(String[] args) throws SQLException, IOException {
+    public static void main(String[] args) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         System.setOut(new PrintStream(baos));
         System.setErr(new PrintStream(baos));

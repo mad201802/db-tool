@@ -26,7 +26,7 @@ public class QueryProcessor {
      * @param query The query to execute
      * @throws DbToolException If an error occurs while connecting to the database
      */
-    public QueryProcessor(IDatabase db, Query query) throws DbToolException {
+    public QueryProcessor(IDatabase db, Query query) {
         this.db = db;
         this.query = query;
     }
