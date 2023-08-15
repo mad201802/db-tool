@@ -1,6 +1,7 @@
 package de.dbtool.database.interfaces;
 
 import de.dbtool.cli.subcommands.options.SupportedDatabases;
+import de.dbtool.console.ConsolePrinter;
 import de.dbtool.drivers.JDBCDriverLoader;
 import de.dbtool.exceptions.DbToolException;
 import de.dbtool.files.schemas.Profile;
@@ -30,15 +31,23 @@ public class DefaultDatabase implements IDatabase {
 
     @Override
     public void connect() throws DbToolException {
-        System.out.println("Connecting to database: " + profile.hostname + ":" + profile.port + "/" + profile.dbName);
+        String url = "";
         Properties connectionProps = new Properties();
-        connectionProps.put("user", profile.username);
-        connectionProps.put("password", profile.password);
 
-        String url = "jdbc:" + this.databaseType + "://" + profile.hostname + ":" + profile.port + "/" + profile.dbName;
+        if(profile.type == SupportedDatabases.SQLITE) {
+            ConsolePrinter.printInfo("Reading database: " + profile.hostname);
+            url = "jdbc:sqlite:" + profile.hostname;
+        } else {
+            ConsolePrinter.printInfo("Connecting to database: " + profile.hostname + ":" + profile.port + "/" + profile.dbName);
+            connectionProps.put("user", profile.username);
+            connectionProps.put("password", profile.password);
+
+            url = "jdbc:" + this.databaseType + "://" + profile.hostname + ":" + profile.port + "/" + profile.dbName;
+        }
+
         try {
             connection = DriverManager.getConnection(url, connectionProps);
-            System.out.println("Successfully connected to database!");
+            ConsolePrinter.printSuccess("Successfully connected to database!");
         } catch (SQLException e) {
             throw new DbToolException("Error connecting to database: " + e.getMessage());
         }
@@ -99,7 +108,7 @@ public class DefaultDatabase implements IDatabase {
     }
 
     @Override
-    public List<List<String>> getValues(String table, Set<String> columns, List<String> patterns, List<String> compares, boolean useAnd, Integer limit) throws DbToolException {
+    public List<List<String>> getValues(String table, Set<String> columns, List<String> patterns, List<String> compares, boolean useAnd, Optional<Integer> limitRows) throws DbToolException {
         final String columnSelection = columns.isEmpty() ? "*" : String.join(", ", columns);
 
         StringBuilder query = new StringBuilder();
@@ -143,9 +152,9 @@ public class DefaultDatabase implements IDatabase {
         }
 
         // add limit
-        if (limit != null) query.append(" LIMIT ").append(limit);
+        limitRows.ifPresent(integer -> query.append(" LIMIT ").append(integer));
 
-        System.out.println("Executing query: " + query);
+        ConsolePrinter.printVerbose("Executing query: " + query.toString());
 
         try(Statement stmt = connection.createStatement()) {
             ResultSet rs = stmt.executeQuery(query.toString());

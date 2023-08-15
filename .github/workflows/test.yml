@@ -17,4 +17,6 @@ jobs:
           java-version: '17'
           cache: 'gradle'
       - run: chmod +x ./gradlew
-      - run: ./gradlew test --no-daemon
+      - run: ls -la
+      - run: ./gradlew test
+      - run: ls -la

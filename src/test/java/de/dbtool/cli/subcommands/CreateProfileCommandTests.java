@@ -20,7 +20,7 @@ public class CreateProfileCommandTests {
 
     @AfterAll
     public static void cleanup() {
-        System.out.println(FileSystem.deleteDirectory(new File(TMP_FOLDER)));
+        FileSystem.deleteDirectory(new File(TMP_FOLDER));
     }
 
     public static void print(String out, String err) {
