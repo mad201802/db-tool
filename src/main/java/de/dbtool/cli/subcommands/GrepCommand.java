@@ -54,9 +54,6 @@ public class GrepCommand implements Runnable {
     @CommandLine.Option(names = {"--vc-use-and"}, description = "When using multiple value compare options, use AND instead of OR")
     private boolean valueCompareUseAnd = false;
 
-    @CommandLine.Option(names = {"-lc", "--limit-columns"}, description = "Limits the number of columns to display", required = false)
-    private String limitColumnsQuery;
-
     @CommandLine.Option(names = {"-lr", "--limit-rows"}, description = "Limits the number of rows to display", required = false)
     private int limitRows = -1;
 
