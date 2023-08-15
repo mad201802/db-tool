@@ -54,13 +54,13 @@ public class GrepCommand implements Runnable {
     @CommandLine.Option(names = {"--vc-use-and"}, description = "When using multiple value compare options, use AND instead of OR")
     private boolean valueCompareUseAnd = false;
 
-    @CommandLine.Option(names = {"-lr", "--limit-rows"}, description = "Limits the number of rows to display", required = false)
+    @CommandLine.Option(names = {"-lr", "--limit-rows"}, description = "Limits the number of rows to display")
     private int limitRows = -1;
 
-    @CommandLine.Option(names = {"-lt", "--limit-text-length"}, description = "Limits the length of text in a column and display ellipsis", required = false)
+    @CommandLine.Option(names = {"-lt", "--limit-text-length"}, description = "Limits the length of text in a column and display ellipsis")
     private int limitTextLength = -1;
 
-    @CommandLine.Option(names = {"--please-tell-me-everything"}, description = "Prints EVERYTHING", required = false)
+    @CommandLine.Option(names = {"--please-tell-me-everything"}, description = "Prints EVERYTHING")
     private boolean verbose = false;
 
     @Override

@@ -31,7 +31,7 @@ public class DefaultDatabase implements IDatabase {
 
     @Override
     public void connect() throws DbToolException {
-        String url = "";
+        String url;
         Properties connectionProps = new Properties();
 
         if(profile.type == SupportedDatabases.SQLITE) {
@@ -154,7 +154,7 @@ public class DefaultDatabase implements IDatabase {
         // add limit
         limitRows.ifPresent(integer -> query.append(" LIMIT ").append(integer));
 
-        ConsolePrinter.printVerbose("Executing query: " + query.toString());
+        ConsolePrinter.printVerbose("Executing query: " + query);
 
         try(Statement stmt = connection.createStatement()) {
             ResultSet rs = stmt.executeQuery(query.toString());

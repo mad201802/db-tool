@@ -17,7 +17,7 @@ public class SearchUtils {
      */
     public static List<String> getMatchingStrings(List<String> list, String regex) {
 
-        ArrayList<String> matches = new ArrayList<String>();
+        ArrayList<String> matches = new ArrayList<>();
 
         Pattern p = Pattern.compile(regex);
 

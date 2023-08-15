@@ -22,10 +22,12 @@ public class ASCIIArt {
 
     public static void handleDriverName(String name) {
         if (name.toLowerCase().contains("oracle")) {
-            System.out.println("\n" +
-                    "=================================================================================================================\n" +
-                    "= We, the developers of this tool, hate OracleDB and are not recommending using it. Nevertheless continuing ... =\n" +
-                    "=================================================================================================================\n");
+            System.out.println("""
+
+                    =================================================================================================================
+                    = We, the developers of this tool, hate OracleDB and are not recommending using it. Nevertheless continuing ... =
+                    =================================================================================================================
+                    """);
         }
     }
 }
