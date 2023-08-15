@@ -11,8 +11,6 @@
 Db-tool is a database java-based CLI application that allows you to manage your database. It can list all available tables in a database and is able to search through it like grep!
 The use of so called `Profiles` will make your life easier when managing a lot of different databases. Configure once and use it through out the tool.
 
-**Table of content goes here**
-
 ## Features <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Smilies/Star-Struck.png" alt="Star-Struck" width="25" height="25" style="transform: translateY(5px)" />
 
 - Create a profile for different databases with `create-profile`
