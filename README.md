@@ -37,8 +37,6 @@ Please refer to our [How To Install](https://github.com/mad201802/db-tool/wiki/0
 
 Please refer to our [How To Use](https://github.com/mad201802/db-tool/wiki/03-%E2%80%90-How-To-Install)
 
-## Troubleshooting
-
 ## Troubleshooting <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Screwdriver.png" alt="Screwdriver" width="25" height="25" style="transform: translateY(5px)" />
 
 In case you encounter any problems, feel free to contact us via [email](md148@hdm-stuttgart.de) or open an [issue](https://github.com/mad201802/db-tool/issues/new/choose) on GitHub.
