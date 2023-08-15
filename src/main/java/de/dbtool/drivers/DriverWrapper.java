@@ -4,6 +4,9 @@ import java.sql.*;
 import java.util.Properties;
 import java.util.logging.Logger;
 
+/**
+ * This class is a wrapper for the JDBC Driver class
+ */
 public class DriverWrapper implements Driver {
     private final Driver driver;
 

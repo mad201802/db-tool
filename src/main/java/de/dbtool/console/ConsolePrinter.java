@@ -52,6 +52,10 @@ public class ConsolePrinter {
         System.err.println(ANSI_RED + PREFIX + "[ERROR] " + message + ANSI_RESET);
     }
 
+    /**
+     * Print an success message
+     * @param message the error message
+     */
     public static void printSuccess(String message) {
         System.out.println(ANSI_GREEN + PREFIX + "[SUCCESS] " + message + ANSI_RESET);
     }

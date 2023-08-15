@@ -57,5 +57,5 @@ public interface IDatabase {
      * @return A list of rows that match the given patterns
      * @throws DbToolException If an error occurs while getting the rows, for example if a compare clauses uses invalid column names
      */
-    List<List<String>> getValues(String table, Set<String> columns, List<String> patterns, List<String> compares, boolean useAnd, Integer limit) throws DbToolException ;
+    List<List<String>> getValues(String table, Set<String> columns, List<String> patterns, List<String> compares, boolean useAnd, Optional<Integer> limit) throws DbToolException ;
 }

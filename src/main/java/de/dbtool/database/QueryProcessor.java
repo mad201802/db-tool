@@ -8,7 +8,6 @@ import de.dbtool.utils.SearchUtils;
 import de.dbtool.utils.Utils;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * This class is used to execute a Query object on a database
@@ -123,7 +122,7 @@ public class QueryProcessor {
                         t, columns.get(t),
                         valuePatterns, valueCompares,
                         query.isValueCompareUseAnd(),
-                        query.getLimitRows() > 0 ? query.getLimitRows() : null
+                        query.getLimitRows() > 0 ? Optional.of(query.getLimitRows()) : Optional.empty()
                 );
                 if(values.size() == 0) continue;
 

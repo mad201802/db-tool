@@ -9,8 +9,17 @@ import java.net.URLClassLoader;
 import java.sql.Driver;
 import java.util.ServiceLoader;
 
+/**
+ * This class is used to load JDBC drivers from a given path
+ */
 public class JDBCDriverLoader {
 
+    /**
+     * Load a JDBC driver from a given path
+     * @param driverPath The path to the driver
+     * @return The loaded driver
+     * @throws DbToolException If an error occurs while loading the driver
+     */
     public static Driver loadDriver(String driverPath) throws DbToolException {
         File driverFile = new File(driverPath);
         if (!driverFile.exists()) {
