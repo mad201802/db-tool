@@ -43,6 +43,10 @@ Please refer to our [How To Use](https://github.com/mad201802/db-tool/wiki/03-%E
 
 In case you encounter any problems, feel free to contact us via [email](md148@hdm-stuttgart.de) or open an [issue](https://github.com/mad201802/db-tool/issues/new/choose) on GitHub.
 
+## Known bugs
+
+- Depending on which shell you use, the used color codes may not work (currently not working on Windows Command Prompt). This leads to weird characters in the output.
+
 ## Contributing <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Hand%20gestures/Handshake.png" alt="Handshake" width="25" height="25" style="transform: translateY(5px)" />
 
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
