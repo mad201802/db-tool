@@ -183,7 +183,7 @@ public class DefaultDatabase implements IDatabase {
      */
     private void loadDriverIfNecessary() throws DbToolException {
         if (profile.type == SupportedDatabases.OTHER) {
-            System.out.println("Loading driver: " + profile.driverPath);
+            ConsolePrinter.printInfo("Loading driver: " + profile.driverPath);
             try {
                 Driver driver = JDBCDriverLoader.loadDriver(profile.driverPath);
                 ASCIIArt.handleDriverName(driver.toString());
